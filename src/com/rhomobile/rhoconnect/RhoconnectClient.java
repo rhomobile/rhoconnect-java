@@ -16,6 +16,8 @@ import org.springframework.web.client.RestTemplate;
 
 public class RhoconnectClient {
 	private static final Logger logger = Logger.getLogger(RhoconnectClient.class);	
+	private static final String RhoconnectControllerName = 
+		"com.rhomobile.rhoconnect.controller.RhoconnectController";
 	
 	private String endpointUrl;
 	private String appEndpoint;
@@ -88,28 +90,46 @@ public class RhoconnectClient {
 
 	    setAppEndpoint();
 	}
-	
-	public boolean notifyOnCreate(String sourceName, String partition, HashMap<String, Object> objects) {
+
+	public boolean notifyOnCreate(String sourceName, String partition, Object objId, Object object) {
+		// Ignore notification calls from RhoconnectController
+		if (stackTraceInclude(RhoconnectControllerName)) {
+			logger.info("Notifications from RhoconnectController ingnored");
+			return true;
+		}
+
+		HashMap<String, Object> objects = new HashMap<String, Object>();
+		objects.put((String)objId, daoToMap(object));
 		HashMap<String, Object> reqHash = new HashMap<String, Object>();
 		reqHash.put("objects", objects);
-
 		return sendObjects("push_objects", sourceName, partition, reqHash);
-	}
+	}	
 	
-	public boolean notifyOnUpdate(String sourceName, String partition, HashMap<String, Object> objects) {
+	public boolean notifyOnUpdate(String sourceName, String partition, Object objId, Object object) {
+		// Ignore notification calls from RhoconnectController
+		if (stackTraceInclude(RhoconnectControllerName)) {
+			logger.info("Notifications from RhoconnectController ingnored");
+			return true;
+		}	
+			
+		HashMap<String, Object> objects = new HashMap<String, Object>();
+		objects.put((String)objId, daoToMap(object));			
 		HashMap<String, Object> reqHash = new HashMap<String, Object>();
 		reqHash.put("objects", objects);
-
-		return sendObjects("push_objects", sourceName, partition, reqHash);
-	}
+		return sendObjects("push_objects", sourceName, partition, reqHash);		
+	}	
 	
-	// bool notify_on_delete(String source_name, String partition, Object id)
-	public boolean notifyOnDelete(String sourceName, String partition, Object id) {
+	public boolean notifyOnDelete(String sourceName, String partition, Object objId) {
+		// Ignore notification calls from RhoconnectController
+		if (stackTraceInclude(RhoconnectControllerName)) {
+			logger.info("Notifications from RhoconnectController ingnored");
+			return true;
+		}	
+		
 		HashMap<String, Object> reqHash = new HashMap<String, Object>();
 		// Array of ids of objects to be deleted
-		Object [] deletes = { id }; 
+		Object [] deletes = { objId }; 
 		reqHash.put("objects", deletes);
-
         return sendObjects("push_deletes", sourceName, partition, reqHash);	
 	}
 
@@ -138,6 +158,7 @@ public class RhoconnectClient {
 	}
 
 	// Helper methods
+	// Convert DAO object to hash map
 	public static Map daoToMap(Object model) {
 		HashMap<String, Object> hash = new HashMap<String, Object>();
 
@@ -155,6 +176,20 @@ public class RhoconnectClient {
 			e.printStackTrace();
 		}		
 		return hash;
+	}
+
+	// Get stack trace and look for "controllerName" there
+	private static boolean stackTraceInclude(String controllerName) {
+		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+		// stack[0] contains the method that created the stack frames.
+		// stack[stack.length-1] contains the oldest method call.
+		// Enumerate each stack element.		
+		for (int i = 1; i < stack.length; i++) {
+			String className = stack[i].getClassName();
+			if (className.equals(controllerName))
+				return true;
+		}
+		return false;
 	}
 	
 }
