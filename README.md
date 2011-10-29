@@ -82,6 +82,83 @@ For testing and evaluation purposes you might want to use [RhoconnectJavaSample]
 	    Integer delete(String resource, String partition, Map<String, Object> attributes);
     }
 
+For example, RhoconnectJavaSample application implementation is based on contactService API:
+
+    /**
+    * RhoconnectImpl.java 
+    */
+    package com.rhomobile.rhoconnect;
+
+    import java.util.HashMap;
+    import java.util.Iterator;
+    import java.util.List;
+    import java.util.Map;
+
+    import org.apache.commons.beanutils.BeanUtils;
+    import org.springframework.beans.factory.annotation.Autowired;
+
+    import com.rhomobile.contact.form.Contact;
+    import com.rhomobile.contact.service.ContactService;
+
+    public class RhoconnectImpl implements Rhoconnect {
+
+        @Autowired
+        private ContactService contactService;	
+
+        @Override
+        public boolean authenticate(String login, String password, Map<String, Object> attribures) {
+            // TODO: your authentication code goes here ...
+            return true;
+        }
+	
+        @Override
+        public Map<String, Object> query_objects(String resource, String partition) {
+            Map<String, Object> h = new HashMap<String, Object>();
+            List<Contact> contacts =  contactService.listContact();		
+            Iterator<Contact> it = contacts.iterator( );
+            while(it.hasNext()) {
+                Contact c =(Contact)it.next();
+          	    h.put(c.getId().toString(), c);
+            }
+            return h;
+        }
+
+        @Override
+        public Integer create(String resource, String partition, Map<String, Object> attributes) {
+            Contact contact = new Contact();
+            try {
+                BeanUtils.populate(contact, attributes);
+                int id = contactService.addContact(contact);
+                return id;
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        public Integer update(String resource, String partition, Map<String, Object> attributes) {
+            Integer id = Integer.parseInt((String)attributes.get("id"));
+            Contact contact = contactService.getContact(id);
+            try {
+                BeanUtils.populate(contact, attributes);
+    		    contactService.updateContact(contact);
+    		    return id;
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        public Integer delete(String resource, String partition, Map<String, Object> attributes) {
+            String objId = (String)attributes.get("id");
+            Integer id = Integer.parseInt(objId);
+            contactService.removeContact(id);		
+            return id;
+        }
+    }
+
 
 ## Meta
 Created and maintained by Alexander Babichev.
