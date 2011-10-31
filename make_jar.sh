@@ -1,7 +1,7 @@
 #!/bin/sh
 
 VERSION=0.0.1
-jar cvf rhoconnect-${VERSION}.jar -C bin/ .
+jar -cvfM rhoconnect-java-${VERSION}.jar -C bin/ .
 
-jar tvf rhoconnect-${VERSION}.jar
+jar -tvf rhoconnect-java-${VERSION}.jar
 
