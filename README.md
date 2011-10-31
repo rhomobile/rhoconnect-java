@@ -78,8 +78,7 @@ For testing and evaluation purposes you might want to use [RhoconnectJavaSample]
     </dependency>
 
 
-### To establish communication from the rhoconnect instance to your java back-end application you need 
-implement Rhoconnect interface:
+### To establish communication from the rhoconnect instance to your java back-end application you need implement Rhoconnect interface:
 
     package com.rhomobile.rhoconnect;
     import java.util.Map;
@@ -170,8 +169,7 @@ For example, RhoconnectJavaSample application implementation is based on contact
         }
     }
 
-### To establish communication from your java back-end application the rhoconnect instance you need 
-autowire your data access service layer with RhoconnectClient bean and insert noftifications hooks there:
+### To establish communication from your java back-end application the rhoconnect instance you need autowire your data access service layer with RhoconnectClient bean and insert noftifications hooks there:
 
      package com.rhomobile.rhoconnect;
     
