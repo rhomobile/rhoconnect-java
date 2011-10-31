@@ -67,7 +67,16 @@ For testing and evaluation purposes you might want to use [RhoconnectJavaSample]
      	<property name="apiToken" value="sometokenforme" />
     </bean>
 
-### Add rhoconnect-java code to your project 
+### Add Add rhoconnect-java jar to maven 2 build classpath:
+
+    <dependency>
+        <groupId>rhoconnect-java</groupId>
+        <artifactId>rhoconnect-java</artifactId>
+        <version>0.0.1</version>
+        <scope>system</scope>
+        <systemPath>/path-to-jar-directory/rhoconnect-java-0.0.1.jar</systemPath> <!-- Set yuor path to rhoconnect-java jar -->
+    </dependency>
+
 
 ### Implement Rhoconnect interface:
 
