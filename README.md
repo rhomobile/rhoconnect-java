@@ -60,12 +60,35 @@ For testing and evaluation purposes you might want to use [RhoconnectJavaSample]
 
     <!-- rhoconnect-java plugin beans -->
     <bean id="rhoconnect" class = "com.rhomobile.rhoconnect.RhoconnectImpl" />
+    
     <bean id="rhoconnectClient" class = "com.rhomobile.rhoconnect.RhoconnectClient" init-method="setAppEndpoint" >
      	<property name="restTemplate"><ref bean="restTemplate"/></property>
-     	<property name="endpointUrl" value="http://localhost:9292" />
-     	<property name="appEndpoint" value="http://localhost:8080/contacts" />
-     	<property name="apiToken" value="sometokenforme" />
+     	<property name="endpointUrl" value="your_rhoconnect_server_url" />
+     	<property name="appEndpoint" value="your_spring_app_url" />
+     	<property name="apiToken" value="rhoconnect_api_token" />
     </bean>
+
+`setAppEndpoint` method in `rhoconnectClient` bean is a main point in establishing the communication 
+link between `Rhoconnect` server and the Spring 3 MVC application and it has the following properties you need to 
+configure properly:
+
+<table border="1">
+  <tr>
+	<td><code>endpointUrl</code></td>
+	<td>rhoconnect server's url, for example <code>http://localhost:9292</code>.</td>
+  </tr>
+  <tr>
+	<td><code>appEndpoint</code></td>
+	<td>your Spring 3 MVC app url, for example <code>http://localhost:8080/contacts</code>.</td>
+  </tr>
+  <tr>
+	<td><code>apiToken</code></td>
+	<td>rhoconnect server's api_token, for example <code>sometokenforme</code>.</td>
+  </tr>
+</table>
+
+
+
 
 ### Add rhoconnect-java jar to maven 2 build classpath:
 
