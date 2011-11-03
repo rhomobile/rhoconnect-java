@@ -88,8 +88,6 @@ configure properly:
 </table>
 
 
-
-
 ### Add rhoconnect-java jar to maven 2 build classpath:
 
     <dependency>
@@ -116,7 +114,7 @@ configure properly:
         Integer delete(String resource, String partition, Map<String, Object> attributes);
     }
 
-For example, RhoconnectJavaSample application implementation is based on contactService API:
+For example, `RhoconnectJavaSample` application implementation is based on `contactService` API:
 
     /**
     * RhoconnectImpl.java 
@@ -206,7 +204,7 @@ For example, RhoconnectJavaSample application implementation is based on contact
      }
 
 
-For example, RhoconnectJavaSample application uses the following implementation:
+For example, `RhoconnectJavaSample` application uses the following implementation:
 
     package com.rhomobile.contact.service;
     import java.util.List;
@@ -233,7 +231,8 @@ For example, RhoconnectJavaSample application uses the following implementation:
         //private static final Logger logger = Logger.getLogger(ContactServiceImpl.class);
 
         private static final String sourceName  = "Contact"; // name of DAO model
-        // Data partitioning: i.e. your user name 
+        
+        // Data partitioning: i.e. your user name for filtering data on per user basis 
         private static final String partition  = "your_partition";
 	
         @Transactional
@@ -265,6 +264,9 @@ For example, RhoconnectJavaSample application uses the following implementation:
             return contactDAO.getContact(id);
         }
      }
+
+For more information about Rhoconnect partitions, please refer to the [Rhoconnect docs](http://docs.rhomobile.com/rhosync/source-adapters#data-partitioning)
+and to the [Querying Datasets](http://docs.rhomobile.com/rhoconnect/rails-plugin#querying-datasets).
 
 
 ## Meta
