@@ -97,7 +97,6 @@ link between the `Rhoconnect` server and the Spring 3 MVC application. It has th
 
 You must add the rhoconnect-java jar to your apache maven 2 build classpath. In the RhoconnectJavaSample application, you would add this code to the pom.xml file, putting in the path to your rhoconnect-java jar into the systemPath.
 
-    :::xml
     <dependency>
         <groupId>rhoconnect-java</groupId>
         <artifactId>rhoconnect-java</artifactId>
@@ -112,7 +111,6 @@ You must add the rhoconnect-java jar to your apache maven 2 build classpath. In 
 
 You need to establish communication from the rhoconnect instance to your java back-end application by implementing Rhoconnect interface.
 
-    :::java
     package com.rhomobile.rhoconnect;
     import java.util.Map;
 
@@ -204,9 +202,8 @@ For example, `RhoconnectJavaSample` application implementation is based on `cont
 
 ### Establishing communication from java back-end application the rhoconnect server
 
-you also must to establish the communication from your java back-end application the rhoconnect instance by autowiring your data access (DAO) service layer with RhoconnectClient bean and inserting noftifications hooks there.
+You also must to establish the communication from your java back-end application the rhoconnect instance by auto-wiring your data access (DAO) service layer with RhoconnectClient bean and inserting notifications hooks there.
 
-     :::java
      package com.rhomobile.rhoconnect;
     
      public class RhoconnectClient {
@@ -287,4 +284,3 @@ and to the [Querying Datasets](http://docs.rhomobile.com/rhoconnect/rails-plugin
 Created and maintained by Alexander Babichev.
 
 Released under the [MIT License](http://www.opensource.org/licenses/mit-license.php).
-
