@@ -200,9 +200,9 @@ For example, `RhoconnectJavaSample` application implementation is based on `cont
         }
     }
 
-### Establishing communication from java back-end application the rhoconnect server
+### Establishing communication from java back-end application to the rhoconnect server
 
-You also must to establish the communication from your java back-end application the rhoconnect instance by auto-wiring your data access (DAO) service layer with RhoconnectClient bean and inserting notifications hooks there.
+You also must to establish the communication from your java back-end application to the rhoconnect instance by auto-wiring your data access (DAO) service layer with RhoconnectClient bean and inserting notifications hooks there.
 
      package com.rhomobile.rhoconnect;
     
