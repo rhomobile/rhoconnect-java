@@ -92,6 +92,16 @@ link between the `Rhoconnect` server and the Spring 3 MVC application. It has th
   </tr>
 </table>
 
+You can get the token from your rhoconnect app directory by executing the following command:
+
+    $ rake rhoconnect:get_token
+
+If you're on mac, you can copy it to clipboard with
+
+    $ cat ~/.rhoconnect_token | pbcopy
+
+Then assign the token to property `aptToken`. 
+
 
 ### Adding rhoconnect-java to the Build Path
 
