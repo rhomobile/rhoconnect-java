@@ -1,20 +1,21 @@
-rhoconnect-java
+RhoConnect-Java
 ===
 
-Rhoconnect-java library is designed for the [Rhoconnect](http://rhomobile.com/products/rhoconnect/) App Integration Server.
+RhoConnect-Java library is designed for the [RhoConnect](http://rhomobile.com/products/rhoconnect/) App Integration Server.
 
-Using Rhoconnect-java plugin, your [Spting 3 MVC](http://www.springsource.org/) application's data will transparently synchronize with a mobile application built on the [Rhodes framework](http://rhomobile.com/products/rhodes), or any of the available [Rhoconnect clients](http://rhomobile.com/products/rhoconnect/).
+Using the RhoConnect-Java plugin, your [Spting 3 MVC](http://www.springsource.org/) application's data will transparently synchronize with a mobile application built on the [Rhodes framework](http://rhomobile.com/products/rhodes), or any of the available [RhoConnect clients](http://rhomobile.com/products/rhoconnect/).
 
 ## Getting started
 
-We assume that you have a complete java end-to-end application with Spring 3.0 MVC as front end technology and Hibernate as backend ORM technology. For this application we will also use Maven2 for build and dependency management and some database to persist the data. The database is accessed by a Data Access (DAO) layer.
+We assume that you have a complete java end-to-end application using Spring 3.0 MVC as the front end technology and Hibernate as backend ORM. For this application we will also use Maven2 for build and dependency management and some database to persist the data. The database is accessed by a Data Access (DAO) layer.
 
-For testing and evaluation purposes you might want to use [RhoconnectJavaSample](https://github.com/shurab/RhoconnectJavaSample) application.
+For testing and evaluation purposes you can use [RhoconnectJavaSample](https://github.com/shurab/RhoconnectJavaSample) application as a starting point before continuing with the following steps.
 
 ### Adding Dependencies to Your Maven 2 Project
 
 Add dependencies to your Apache Maven 2 project object model (POM): apache common beanutils, and Jackson JSON mapper. In the RhoconnectJavaSample application, this code is in the pom.xml file.
 
+    :::xml
     <!-- apache commons beanutils -->  
     <dependency>  
         <groupId>commons-beanutils</groupId>  
@@ -34,6 +35,7 @@ Add dependencies to your Apache Maven 2 project object model (POM): apache commo
 
 Update your servlet xml configuration file to include rhoconnect-java metadata: the packages, converters, and beans. In the RhoconnectJavaSample, this code is in comments in the src/main/webapp/WEB-INF/spring-servlet.xml file.
 
+    :::xml
     <!-- rhoconnect-java plugin packages -->
     <context:component-scan base-package="com.rhomobile.rhoconnect.controller" /> 
 
@@ -92,21 +94,12 @@ link between the `Rhoconnect` server and the Spring 3 MVC application. It has th
   </tr>
 </table>
 
-You can get the token from your rhoconnect app directory by executing the following command:
-
-    $ rake rhoconnect:get_token
-
-If you're on mac, you can copy it to clipboard with
-
-    $ cat ~/.rhoconnect_token | pbcopy
-
-Then assign the token to property `aptToken`. 
-
 
 ### Adding rhoconnect-java to the Build Path
 
 You must add the rhoconnect-java jar to your apache maven 2 build classpath. In the RhoconnectJavaSample application, you would add this code to the pom.xml file, putting in the path to your rhoconnect-java jar into the systemPath.
 
+    :::xml
     <dependency>
         <groupId>rhoconnect-java</groupId>
         <artifactId>rhoconnect-java</artifactId>
@@ -117,10 +110,11 @@ You must add the rhoconnect-java jar to your apache maven 2 build classpath. In 
     </dependency>
 
 
-### Establishing communication from the rhoconnect server to java back-end application
+### Establishing communication from the RhoConnect server to java back-end application
 
-You need to establish communication from the rhoconnect instance to your java back-end application by implementing Rhoconnect interface.
+You need to establish communication from the RhoConnect instance to your java back-end application by implementing Rhoconnect interface.
 
+    :::java
     package com.rhomobile.rhoconnect;
     import java.util.Map;
 
@@ -135,6 +129,7 @@ You need to establish communication from the rhoconnect instance to your java ba
 
 For example, `RhoconnectJavaSample` application implementation is based on `contactService` API:
 
+    :::java
     /**
     * RhoconnectImpl.java 
     */
@@ -210,23 +205,24 @@ For example, `RhoconnectJavaSample` application implementation is based on `cont
         }
     }
 
-### Establishing communication from java back-end application to the rhoconnect server
+### Establishing communication from java back-end application to the RhoConnect server
 
-You also must to establish the communication from your java back-end application to the rhoconnect instance by auto-wiring your data access (DAO) service layer with RhoconnectClient bean and inserting notifications hooks there.
+You also must to establish the communication from your java back-end application to the RhoConnect instance by autowiring your data access (DAO) service layer with RhoconnectClient bean and inserting notifications hooks there.
 
-     package com.rhomobile.rhoconnect;
+    :::java
+    package com.rhomobile.rhoconnect;
     
-     public class RhoconnectClient {
-         // ...
-         public boolean notifyOnCreate(String sourceName, String partition, Object objId, Object object);
-         public boolean notifyOnUpdate(String sourceName, String partition, Object objId, Object object);
-         public boolean notifyOnDelete(String sourceName, String partition, Object objId);
-         // ...
-     }
-
+    public class RhoconnectClient {
+        // ...
+        public boolean notifyOnCreate(String sourceName, String partition, Object objId, Object object);
+        public boolean notifyOnUpdate(String sourceName, String partition, Object objId, Object object);
+        public boolean notifyOnDelete(String sourceName, String partition, Object objId);
+        // ...
+    }
 
 For example, `RhoconnectJavaSample` application uses the following implementation:
 
+    :::java
     package com.rhomobile.contact.service;
     import java.util.List;
 
@@ -286,8 +282,7 @@ For example, `RhoconnectJavaSample` application uses the following implementatio
         }
      }
 
-For more information about Rhoconnect partitions, please refer to the [Rhoconnect docs](http://docs.rhomobile.com/rhosync/source-adapters#data-partitioning)
-and to the [Querying Datasets](http://docs.rhomobile.com/rhoconnect/rails-plugin#querying-datasets).
+For more information about RhoConnect partitions, please refer to the [RhoConnect docs](http://docs.rhomobile.com/rhosync/source-adapters#data-partitioning).
 
 
 ## Meta
