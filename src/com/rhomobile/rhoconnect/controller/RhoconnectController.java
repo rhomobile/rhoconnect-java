@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.rhomobile.rhoconnect.Rhoconnect;
+import com.rhomobile.rhoconnect.RhoconnectDispatcher;
 
 @Controller
 @RequestMapping("/rhoconnect/*")
@@ -23,6 +24,8 @@ public class RhoconnectController {
     //get log4j handler
 	private static final Logger logger = Logger.getLogger(RhoconnectController.class);	
 
+	@Autowired
+	private RhoconnectDispatcher dispatcher; 
 	@Autowired
 	private Rhoconnect rhoconnect;
 
@@ -54,7 +57,7 @@ public class RhoconnectController {
 		
 		String resource = (String)body.get("resource");
 		String partition = (String)body.get("partition");
-		Map<String, Object> h = rhoconnect.query_objects(resource, partition);		
+		Map<String, Object> h = dispatcher.query_objects(resource, partition);		
 		logger.info(h.toString());
 
 		return h;
@@ -74,7 +77,7 @@ public class RhoconnectController {
 		String resource = (String)body.get("resource");
 		String partition = (String)body.get("partition");
 		Map<String, Object> attributes = (Map<String, Object>) body.get("attributes");
-		Integer id = rhoconnect.create(resource, partition, attributes);
+		Integer id = dispatcher.create(resource, partition, attributes);
 		logger.info("RhoconnectController#create: id = " + id);
 		
 	    HttpHeaders responseHeaders = new HttpHeaders();
@@ -94,7 +97,7 @@ public class RhoconnectController {
 		String resource = (String)body.get("resource");
 		String partition = (String)body.get("partition");
 		Map<String, Object> attributes = (Map<String, Object>) body.get("attributes");
-		Integer id = rhoconnect.update(resource, partition, attributes);
+		Integer id = dispatcher.update(resource, partition, attributes);
 		logger.info("RhoconnectController#update: id = " + id);
 		
 	    HttpHeaders responseHeaders = new HttpHeaders();
@@ -116,7 +119,7 @@ public class RhoconnectController {
 		String resource = (String)body.get("resource");
 		String partition = (String)body.get("partition");		
 		Map<String, Object> attributes = (Map<String, Object>) body.get("attributes");
-		Integer id = rhoconnect.delete(resource, partition, attributes);
+		Integer id = dispatcher.delete(resource, partition, attributes);
 		logger.info("RhoconnectController#delete: id = " + id);
 		
 		HttpHeaders responseHeaders = new HttpHeaders();
