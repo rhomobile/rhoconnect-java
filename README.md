@@ -5,6 +5,20 @@ RhoConnect-Java library is designed for the [RhoConnect](http://rhomobile.com/pr
 
 Using the RhoConnect-Java plugin, your [Spting 3 MVC](http://www.springsource.org/) application's data will transparently synchronize with a mobile application built on the [Rhodes framework](http://rhomobile.com/products/rhodes), or any of the available [RhoConnect clients](http://rhomobile.com/products/rhoconnect/).
 
+## Prerequisites
+
+* Java (1.6)
+* Maven2 (2.2.1)
+* Git
+
+If you cloned rhoconnect-java project, then you can create target plugin jar from sourses by executing the following commands:
+
+    mvn clean
+    mvn compile
+    mvn jar:jar
+    
+Archived rhoconnect-plugin-x.y.z.jar file will be created in target/ directory.   
+
 ## Getting started
 
 We assume that you have a complete java end-to-end application using Spring 3.0 MVC as the front end technology and Hibernate as backend ORM. For this application we will also use Maven2 for build and dependency management and some database to persist the data. The database is accessed by a Data Access (DAO) layer.
