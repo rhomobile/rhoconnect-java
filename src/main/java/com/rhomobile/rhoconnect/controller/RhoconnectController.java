@@ -21,7 +21,6 @@ import com.rhomobile.rhoconnect.RhoconnectDispatcher;
 @Controller
 @RequestMapping("/rhoconnect/*")
 public class RhoconnectController {
-    //get log4j handler
 	private static final Logger logger = Logger.getLogger(RhoconnectController.class);	
 
 	@Autowired
@@ -32,7 +31,7 @@ public class RhoconnectController {
 	// POST /rhoconnect/authenticate
 	@RequestMapping(method=RequestMethod.POST, value="authenticate", headers="Accept=application/json")
 	public ResponseEntity<String> authenticate(@RequestBody Map<String, Object> body) {
-		logger.info("RhoconnectController#authenticate " + body.toString());
+		logger.debug("RhoconnectController#authenticate " + body.toString());
 		String login = (String)body.get("login");
 		String password = (String)body.get("password");
 		
@@ -49,16 +48,14 @@ public class RhoconnectController {
     // POST /rhoconnect/query
 	@RequestMapping(method=RequestMethod.POST, value="/query", headers="Accept=application/json")	
 	public @ResponseBody Map<String, Object> query_objects(@RequestBody Map<String, Object> body) {
-		logger.info("RhoconnectController#query_objects");
-		logger.info(body.toString());
-		//
+		logger.debug("RhoconnectController#query_objects");
+		logger.debug(body.toString());
 		// { resource=Contact, partition=alexb, attributes=null, api_token=sometokenforme}
-		//
 		
 		String resource = (String)body.get("resource");
 		String partition = (String)body.get("partition");
 		Map<String, Object> h = dispatcher.query_objects(resource, partition);		
-		logger.info(h.toString());
+		logger.debug(h.toString());
 
 		return h;
     } 
@@ -66,19 +63,16 @@ public class RhoconnectController {
 	 // POST /rhoconnect/create
 	@RequestMapping(method=RequestMethod.POST, value="create", headers="Accept=application/json")
 	public ResponseEntity<String> create(@RequestBody Map<String, Object> body) {
-		logger.info("RhoconnectController#create: request");
-		logger.info(body.toString());
-		//
+		logger.debug("RhoconnectController#create");
+		logger.debug(body.toString());
 		// {resource=Contact, partition="", 
-		//  attributes={telephone=me@mail.com, lastname=world, firstname=hello, email=123-456-6789}, 
-		//  api_token=sometokenforme}
-		// 
+		//  attributes={telephone=me@mail.com, lastname=world, firstname=hello, email=123-456-6789}, api_token=sometokenforme}
 
 		String resource = (String)body.get("resource");
 		String partition = (String)body.get("partition");
 		Map<String, Object> attributes = (Map<String, Object>) body.get("attributes");
 		Integer id = dispatcher.create(resource, partition, attributes);
-		logger.info("RhoconnectController#create: id = " + id);
+		logger.debug("RhoconnectController#create: id = " + id);
 		
 	    HttpHeaders responseHeaders = new HttpHeaders();
 	    responseHeaders.setContentType(MediaType.TEXT_PLAIN);
@@ -88,17 +82,15 @@ public class RhoconnectController {
 	// POST /rhoconnect/update
 	@RequestMapping(method=RequestMethod.POST, value="update", headers="Accept=application/json")
 	public ResponseEntity<String> update(@RequestBody Map<String, Object> body) {
-		logger.info("RhoconnectController#update: request");
-		logger.info(body.toString());
-		//		
-		//{ resource=Contact, partition="", attributes={firstname=Maxz, id=29}, api_token=sometokenforme}
-		//
+		logger.debug("RhoconnectController#update");
+		logger.debug(body.toString());		
+		//{ resource=Contact, partition="", attributes={firstname=Alex, id=29}, api_token=sometokenforme}
 
 		String resource = (String)body.get("resource");
 		String partition = (String)body.get("partition");
 		Map<String, Object> attributes = (Map<String, Object>) body.get("attributes");
 		Integer id = dispatcher.update(resource, partition, attributes);
-		logger.info("RhoconnectController#update: id = " + id);
+		logger.debug("RhoconnectController#update: id = " + id);
 		
 	    HttpHeaders responseHeaders = new HttpHeaders();
 	    responseHeaders.setContentType(MediaType.TEXT_PLAIN);	    
@@ -108,23 +100,19 @@ public class RhoconnectController {
 	// POST /rhoconnect/delete
 	@RequestMapping(method=RequestMethod.POST, value="delete", headers="Accept=application/json")
 	public ResponseEntity<String> delete(@RequestBody Map<String, Object> body) {
-		logger.info("RhoconnectController#delete: request");
-		logger.info(body.toString());
-		//		
+		logger.debug("RhoconnectController#delete");
+		logger.debug(body.toString());
 		// { resource=Contact, partition="", 
-		//   attributes={email=maxz@mail.ru, telephone=650-666-7878, firstname=Maxz, lastname=Zverev, id=29}, 
-		//   api_token=sometokenforme}
-		//
+		//   attributes={email=maxz@mail.ru, telephone=650-666-7878, firstname=Alex, lastname=Bab, id=29}, api_token=sometokenforme}
 
 		String resource = (String)body.get("resource");
 		String partition = (String)body.get("partition");		
 		Map<String, Object> attributes = (Map<String, Object>) body.get("attributes");
 		Integer id = dispatcher.delete(resource, partition, attributes);
-		logger.info("RhoconnectController#delete: id = " + id);
+		logger.debug("RhoconnectController#delete: id = " + id);
 		
 		HttpHeaders responseHeaders = new HttpHeaders();
 	    responseHeaders.setContentType(MediaType.TEXT_PLAIN);	    
         return new ResponseEntity<String>(Integer.toString(id), responseHeaders, HttpStatus.OK);
     }
-
 }

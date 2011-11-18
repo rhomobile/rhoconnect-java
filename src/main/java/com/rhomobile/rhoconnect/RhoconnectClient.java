@@ -142,9 +142,9 @@ public class RhoconnectClient {
 		headers.setContentType(MediaType.APPLICATION_JSON);				 
 		HttpEntity<Map> entity = new HttpEntity<Map>(hash, headers);
 
-		logger.info("RhoconnectClient#sendObjects: method: " + method);
-		logger.info("RhoconnectClient#sendObjects: source/partition: " + sourceName + '/' +	partition);
-		logger.info("RhoconnectClient#sendObjects: hash: " + hash.toString());
+		logger.debug("RhoconnectClient#sendObjects: method: " + method);
+		logger.debug("RhoconnectClient#sendObjects: source/partition: " + sourceName + '/' +	partition);
+		logger.debug("RhoconnectClient#sendObjects: hash: " + hash.toString());
 
 		ResponseEntity<String> response = restTemplate.exchange(
 				endpointUrl + "/api/source/" + method, 
@@ -152,7 +152,7 @@ public class RhoconnectClient {
 				entity,
 				String.class);
 		HttpStatus statusCode = response.getStatusCode();
-		logger.info("RhoconnectClient#sendObjects: statusCode: " + statusCode.value());
+		logger.debug("RhoconnectClient#sendObjects: statusCode: " + statusCode.value());
 
 		return(statusCode.value() == 200);
 	}
@@ -190,6 +190,5 @@ public class RhoconnectClient {
 				return true;
 		}
 		return false;
-	}
-	
+	}	
 }
