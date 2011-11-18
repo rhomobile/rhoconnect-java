@@ -11,7 +11,7 @@ Using the RhoConnect-Java plugin, your [Spting 3 MVC](http://www.springsource.or
 * Maven2 (2.2.1)
 * Git
 
-If you cloned rhoconnect-java project, then you can create target plugin jar from sourses by executing the following commands:
+If you cloned rhoconnect-java project, then you can create target plugin jar from sources by executing the following commands:
 
     mvn clean
     mvn compile
