@@ -173,10 +173,11 @@ And add its bean to src/main/webapp/WEB-INF/spring-servlet.xml file
 
 	:::xml
 	<beans>
-	<!-- ... -->	    
-	<!-- This bean should implement your application specific authentication -->
+        <!-- ... -->
+        
 	<bean id="authenticate" class = "com.acme.AcmeAuthenticate" />
-	<!-- ... -->	    
+	
+	<!-- ... -->	
 	</beans>
 
  
