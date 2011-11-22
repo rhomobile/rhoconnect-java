@@ -31,7 +31,8 @@ and executing in cloned project directory the following commands:
 
 The archived rhoconnect-java-x.y.z.jar file will be created in the project target/ directory.
 
-For testing and evaluation purposes you can use [RhoconnectJavaSample](https://github.com/shurab/RhoconnectJavaSample) application as a starting point before continuing with the following steps. If you wish you might look at the same [application](https://github.com/shurab/RhoconnectJavaPluginDemo) after it's integrated with rhoconnect-java plugin and walk through the code.
+For testing and evaluation purposes you can use [RhoconnectJavaSample](https://github.com/shurab/RhoconnectJavaSample) application as a starting point before continuing with the following steps. 
+If you wish you might wanted to look at the same [application](https://github.com/shurab/RhoconnectJavaPluginDemo) after it's integrated with rhoconnect-java plugin and walk through the code changes.
 
 ### Adding Dependencies to Your Maven 2 Project
 
