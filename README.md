@@ -60,18 +60,24 @@ Add dependencies to your Apache Maven 2 project object model (POM): log4j, apach
         <optional>false</optional>  
     </dependency>
 
-### Adding rhoconnect-java jar to the Build Path
+You must also add the rhoconnect-java jar to your apache maven 2 project. At this moment rhoconnect-plugin jar is not available in Maven public repositories and you need install the jar manually into your Maven’s local repository.
+Download the `rhoconnect-java-1.0-SNAPSHOT.jar` jar file and put it into your hard drive, and issue following Maven’s command:
 
-You must add the rhoconnect-java jar to your apache maven 2 build classpath. In the RhoconnectJavaSample application, you would add this code to the pom.xml file, putting in the path to your rhoconnect-java jar into the systemPath.
+    :::term
+	mvn install:install-file -Dfile=/path-to-jar/rhoconnect-java-1.0-SNAPSHOT.jar \
+	-DgroupId=com.rhomobile.rhoconnect -DartifactId=rhoconnect-java -Dversion=1.0-SNAPSHOT -Dpackaging=jar
+
+Now, the `rhoconnect-java` jar library is included into your Maven local repository.
+In the RhoconnectJavaSample application, you would add this code to the pom.xml file.
 
     :::xml
-    <dependency>
-	    <groupId>com.rhomobile.rhoconnect</groupId>
-	    <artifactId>rhoconnect-java</artifactId>
-	    <version>1.0-SNAPSHOT</version>
-	    <scope>system</scope>
-	    <systemPath>/absolute-path-to-your-directory/rhoconnect-java-1.0-SNAPSHOT.jar</systemPath>
-    </dependency>
+    <!-- Rhoconnect-java plugin -->
+	<dependency>
+    	<groupId>com.rhomobile.rhoconnect</groupId>
+    	<artifactId>rhoconnect-java</artifactId>
+    	<version>1.0-SNAPSHOT</version>
+    	<type>jar</type>
+	</dependency>
 
 ### Updating Your Servlet XML Configuration File
 
