@@ -112,13 +112,16 @@ Update your servlet xml configuration file to include rhoconnect-java metadata: 
     </bean>    
 
     <!-- rhoconnect-java plugin beans -->
+    <bean id="dispatcher" class = "com.rhomobile.rhoconnect.RhoconnectDispatcher"></bean>
     <bean id="rhoconnectClient" class = "com.rhomobile.rhoconnect.RhoconnectClient" init-method="setAppEndpoint" >
      	<property name="restTemplate"><ref bean="restTemplate"/></property>
      	<property name="endpointUrl" value="your_rhoconnect_server_url" />
      	<property name="appEndpoint" value="your_spring_app_url" />
      	<property name="apiToken" value="rhoconnect_api_token" />
     </bean>
-    <bean id="dispatcher" class = "com.rhomobile.rhoconnect.RhoconnectDispatcher"></bean>
+    
+    <!--The following bean handles the application's authentication routine and should be implemnted by you -->
+    <bean id="authenticate" class = "com.rhomobile.contact.ContactAuthenticate" />
 
 The `setAppEndpoint` method in the `rhoconnectClient` bean in the above code sample is a main point in establishing the communication 
 link between the `Rhoconnect` server and the Spring 3 MVC application. It has the following properties that you need to configure.
@@ -151,27 +154,22 @@ The final step in configuration is to implement application specific authenticat
 For example:
 
     :::java
-	package com.rhomobile.contact;
+    package com.rhomobile.contact;
 
-	import java.util.Map;
-	import org.apache.log4j.Logger;
-	import com.rhomobile.rhoconnect.Rhoconnect;
+    import java.util.Map;
+    import org.apache.log4j.Logger;
+    import com.rhomobile.rhoconnect.Rhoconnect;
 
-	public class ContactAuthenticate implements Rhoconnect {
-		private static final Logger logger = Logger.getLogger(ContactAuthenticate.class);
+    public class ContactAuthenticate implements Rhoconnect {
+        private static final Logger logger = Logger.getLogger(ContactAuthenticate.class);
 
-		@Override
-		public boolean authenticate(String login, String password, Map<String, Object> attributes) {
-			logger.info("ContactAuthenticate#authenticate: implement your authentication code!");
-	        // TODO: your authentication code goes here ...
-			return true;
-		}
-	}
-	
-And specify your bean in src/main/webapp/WEB-INF/spring-servlet.xml file 
-
-	:::xml
-	<bean id="authenticate" class = "com.rhomobile.contact.ContactAuthenticate" />
+        @Override
+        public boolean authenticate(String login, String password, Map<String, Object> attributes) {
+            logger.info("ContactAuthenticate#authenticate: implement your authentication code!");
+            // TODO: your authentication code goes here ...
+            return true;
+        }
+    }
 
 ### Establishing communication from the RhoConnect server to java back-end application
 
@@ -325,7 +323,7 @@ Example for `RhoconnectJavaSample` application:
 	    }
 	 }
 
-Click [here](https://github.com/shurab/RhoconnectJavaPluginDemo) to download full source code of Contact manager application integrated with rhoconnect-java plugin.
+Click [here](https://github.com/shurab/RhoconnectJavaPluginDemo) to download full source code of Contact manager application that integrated with rhoconnect-java plugin.
 
 ## Meta
 Created and maintained by Alexander Babichev.
