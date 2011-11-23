@@ -120,7 +120,7 @@ Update your servlet xml configuration file to include rhoconnect-java metadata: 
      	<property name="apiToken" value="rhoconnect_api_token" />
     </bean>
     
-    <!--The following bean handles the application's authentication routine and should be implemnted by you -->
+    <!--The following bean handles the application's authentication routine and should be implemented by you -->
     <bean id="authenticate" class = "com.rhomobile.contact.ContactAuthenticate" />
 
 The `setAppEndpoint` method in the `rhoconnectClient` bean in the above code sample is a main point in establishing the communication 
@@ -129,19 +129,19 @@ link between the `Rhoconnect` server and the Spring 3 MVC application. It has th
 <table border="1">
   <tr>
 	<td><code>endpointUrl</code></td>
-	<td>rhoconnect server's url, for example <code>http://localhost:9292</code>.</td>
+	<td>rhoconnect server's url, for example <code>http://localhost:9292</code></td>
   </tr>
   <tr>
 	<td><code>appEndpoint</code></td>
-	<td>your Spring 3 MVC app url, for example <code>http://localhost:8080/contacts</code>.</td>
+	<td>your Spring 3 MVC app url, for example <code>http://localhost:8080/contacts</code></td>
   </tr>
   <tr>
 	<td><code>apiToken</code></td>
-	<td>rhoconnect server's api_token, for example <code>sometokenforme</code>.</td>
+	<td>rhoconnect server's api_token, for example <code>sometokenforme</code></td>
   </tr>
 </table>
 
-The final step in configuration is to implement application specific authentication code. You should create a class that implements `Rhoconnect` interface: 
+The `authenticate` bean will be called by rhoconnect server to authenticate users, and has to implement `Rhoconnect` interface provided by rhoconnect-java plugin: 
 
     :::java
     package com.rhomobile.rhoconnect;
