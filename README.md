@@ -60,12 +60,11 @@ Add dependencies to your Apache Maven 2 project object model (POM): log4j, apach
         <optional>false</optional>  
     </dependency>
 
-You must also add the rhoconnect-java jar to your apache maven 2 project. At this moment rhoconnect-plugin jar is not available in Maven public repositories and you need install the jar manually into your Maven’s local repository.
-Download the `rhoconnect-java-1.0-SNAPSHOT.jar` jar file and put it into your hard drive, and issue following Maven’s command:
+You must also add the rhoconnect-java jar to your apache maven 2 project. At this moment rhoconnect-plugin jar is not available in Maven public repositories and you need install the jar manually into your Maven's local repository.
+Download the `rhoconnect-java-1.0-SNAPSHOT.jar` jar file and put it into your hard drive, and issue following Maven's command:
 
     :::term
-	mvn install:install-file -Dfile=/path-to-jar/rhoconnect-java-1.0-SNAPSHOT.jar \
-	-DgroupId=com.rhomobile.rhoconnect -DartifactId=rhoconnect-java -Dversion=1.0-SNAPSHOT -Dpackaging=jar
+    $ mvn install:install-file -Dfile=/path-to-jar/rhoconnect-java-1.0-SNAPSHOT.jar -DgroupId=com.rhomobile.rhoconnect  -DartifactId=rhoconnect-java -Dversion=1.0-SNAPSHOT -Dpackaging=jar
 
 Now, the `rhoconnect-java` jar library is included into your Maven local repository.
 In the RhoconnectJavaSample application, you would add this code to the pom.xml file.
