@@ -32,7 +32,6 @@ and executing in cloned project directory the following commands:
 The archived rhoconnect-java-x.y.z.jar file will be created in the project target/ directory.
 
 For testing and evaluation purposes you can use [RhoconnectJavaSample](https://github.com/shurab/RhoconnectJavaSample) application as a starting point before continuing with the following steps. 
-If you wish you might want to look at the same [application](https://github.com/shurab/RhoconnectJavaPluginDemo) after it's integrated with rhoconnect-java plugin and walk through the code changes.
 
 ### Adding Dependencies to Your Maven 2 Project
 
@@ -76,7 +75,7 @@ You must add the rhoconnect-java jar to your apache maven 2 build classpath. In 
 
 ### Updating Your Servlet XML Configuration File
 
-Update your servlet xml configuration file to include rhoconnect-java metadata: the packages, converters, and beans. In the RhoconnectJavaSample, this code is in comments in the src/main/webapp/WEB-INF/spring-servlet.xml file.
+Update your servlet xml configuration file to include rhoconnect-java metadata: the packages, converters, and beans. In the RhoconnectJavaSample, th following code is added to src/main/webapp/WEB-INF/spring-servlet.xml file.
 
     :::xml
     <!-- rhoconnect-java plugin packages -->
@@ -92,14 +91,11 @@ Update your servlet xml configuration file to include rhoconnect-java metadata: 
          	</list>
      	</property>
     </bean>
-
     <bean id="jsonConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
      	<property name="supportedMediaTypes" value="application/json" />
     </bean>
-
     <bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
     </bean>
-    
     <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
      	<property name="messageConverters">
          	<list>
@@ -110,8 +106,6 @@ Update your servlet xml configuration file to include rhoconnect-java metadata: 
     </bean>    
 
     <!-- rhoconnect-java plugin beans -->
-    <bean id="rhoconnect" class = "com.rhomobile.rhoconnect.RhoconnectImpl" />
-    
     <bean id="rhoconnectClient" class = "com.rhomobile.rhoconnect.RhoconnectClient" init-method="setAppEndpoint" >
      	<property name="restTemplate"><ref bean="restTemplate"/></property>
      	<property name="endpointUrl" value="your_rhoconnect_server_url" />
@@ -151,37 +145,28 @@ The final step in configuration is to implement application specific authenticat
 For example:
 
     :::java
-	package com.acme;
+	package com.rhomobile.contact;
 
 	import java.util.Map;
 	import org.apache.log4j.Logger;
 	import com.rhomobile.rhoconnect.Rhoconnect;
 
-	public class AcmeAuthenticate implements Rhoconnect {
-		private static final Logger logger = Logger.getLogger(AcmeAuthenticate.class);	
+	public class ContactAuthenticate implements Rhoconnect {
+		private static final Logger logger = Logger.getLogger(ContactAuthenticate.class);
 
 		@Override
 		public boolean authenticate(String login, String password, Map<String, Object> attributes) {
-			logger.info("AcmeAuthenticate#authenticate: implement your authentication code!");    		
+			logger.info("ContactAuthenticate#authenticate: implement your authentication code!");
 	        // TODO: your authentication code goes here ...
 			return true;
 		}
-
 	}
 	
-
-And add its bean to src/main/webapp/WEB-INF/spring-servlet.xml file 
+And specify your bean in src/main/webapp/WEB-INF/spring-servlet.xml file 
 
 	:::xml
-	<beans>
-        <!-- ... -->
-        
-	<bean id="authenticate" class = "com.acme.AcmeAuthenticate" />
-	
-	<!-- ... -->	
-	</beans>
+	<bean id="authenticate" class = "com.rhomobile.contact.ContactAuthenticate" />
 
- 
 ### Establishing communication from the RhoConnect server to java back-end application
 
 You need to establish communication from the RhoConnect instance to your java back-end application by mixing RhoconnectResource interface in your data access (DAO) service class:
@@ -333,6 +318,8 @@ Example for `RhoconnectJavaSample` application:
 	        return "alexb";
 	    }
 	 }
+
+Click [here](https://github.com/shurab/RhoconnectJavaPluginDemo) to download full source code of Contact manager application integrated with rhoconnect-java plugin.
 
 ## Meta
 Created and maintained by Alexander Babichev.
