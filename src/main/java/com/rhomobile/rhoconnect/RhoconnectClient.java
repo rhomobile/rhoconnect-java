@@ -58,13 +58,13 @@ public class RhoconnectClient {
 		
 	public void setAppEndpoint(/* String endpoint, String appEndpoint, String api_token */) {
 		HashMap<String, Object> reqHash = new HashMap<String, Object>();
-		reqHash.put("api_token", apiToken);		
+		reqHash.put("api_token", apiToken);
 		HashMap<String, Object> attrHash = new HashMap<String, Object>();
 		attrHash.put("adapter_url", appEndpoint);
         reqHash.put("attributes", attrHash);
 
 		/*
-		 * URL: endpointUr/api/source/save_adapter
+		 * URL: endpointUrl/api/source/save_adapter
 		 * 
 		 * { "api_token" => api_token,
 		 *   "attributes" => { "adapter_url" => appEndpoint } 
