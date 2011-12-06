@@ -10,13 +10,13 @@ Using the RhoConnect-Java plugin, your [Spring 3 MVC](http://www.springsource.or
 * Java (1.6)
 * Maven2 (2.2.1)
 * Git
-* [Rhoconncect-java](https://github.com/downloads/rhomobile/rhoconnect-java/rhoconnect-java-1.0-SNAPSHOT.jar) plugin jar file
+* [Rhoconncect-java](https://github.com/downloads/rhomobile/rhoconnect-java/rhoconnect-java-1.0.0.jar) plugin jar file
 
 ## Getting started
 
 We assume that you have a complete java end-to-end application using Spring 3.0 MVC as the front end technology and Hibernate as backend ORM. For this application we will also use Maven2 for build and dependency management and some database to persist the data. The database is accessed by a Data Access (DAO) layer.
 
-Copy [Rhoconncect-java](https://github.com/downloads/rhomobile/rhoconnect-java/rhoconnect-java-1.0-SNAPSHOT.jar) plugin jar file to your PC.
+Copy [Rhoconncect-java](https://github.com/downloads/rhomobile/rhoconnect-java/rhoconnect-java-1.0.0.jar) plugin jar file to your PC.
 You can also create target rhoconnect-java plugin jar from sources by cloning rhoconnect-java repository 
 
     :::term
@@ -61,10 +61,10 @@ Add dependencies to your Apache Maven 2 project object model (POM): log4j, Apach
     </dependency>
 
 You must also add the rhoconnect-java jar to your Maven 2 project. At this moment rhoconnect-plugin jar is not available in Maven public repositories and you need install the jar manually into your Maven's local repository.
-Download the `rhoconnect-java-1.0-SNAPSHOT.jar` jar file and put it into your hard drive, and issue the following Maven's command:
+Download the `rhoconnect-java-1.0.0.jar` jar file and put it into your hard drive, and issue the following Maven's command:
 
     :::term
-	$ mvn install:install-file -Dfile=/path-to-jar/rhoconnect-java-1.0-SNAPSHOT.jar -DgroupId=com.rhomobile.rhoconnect  -DartifactId=rhoconnect-java -Dversion=1.0-SNAPSHOT -Dpackaging=jar
+	$ mvn install:install-file -Dfile=/path-to-jar/rhoconnect-java-1.0.0.jar -DgroupId=com.rhomobile.rhoconnect  -DartifactId=rhoconnect-java -Dversion=1.0.0 -Dpackaging=jar
 
 Now, the `rhoconnect-java` jar library is included into your Maven local repository.
 In the RhoconnectJavaSample application, you would add this code to the pom.xml file.
@@ -74,7 +74,7 @@ In the RhoconnectJavaSample application, you would add this code to the pom.xml 
 	<dependency>
     	<groupId>com.rhomobile.rhoconnect</groupId>
     	<artifactId>rhoconnect-java</artifactId>
-    	<version>1.0-SNAPSHOT</version>
+    	<version>1.0.0</version>
     	<type>jar</type>
 	</dependency>
 
