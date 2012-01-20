@@ -10,7 +10,7 @@ Using the RhoConnect-Java plugin, your [Spring 3 MVC](http://www.springsource.or
 * Java (1.6)
 * Maven2 (2.2.1)
 * Git
-* [Rhoconncect-java](https://github.com/downloads/rhomobile/rhoconnect-java/rhoconnect-java-1.0.0.jar) plugin jar file
+* [Rhoconncect-java](https://github.com/downloads/rhomobile/rhoconnect-java/rhoconnect-java-1.0.1.jar) plugin jar file
 
 ## Getting started
 
