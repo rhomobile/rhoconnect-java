@@ -4,7 +4,7 @@
 
   <groupId>com.rhomobile.rhoconnect</groupId>
   <artifactId>rhoconnect-java</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
 
   <build>

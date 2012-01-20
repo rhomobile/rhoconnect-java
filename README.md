@@ -64,7 +64,7 @@ You must also add the rhoconnect-java jar to your Maven 2 project. At this momen
 Download the `rhoconnect-java-1.0.0.jar` jar file and put it into your hard drive, and issue the following Maven's command:
 
     :::term
-	$ mvn install:install-file -Dfile=/path-to-jar/rhoconnect-java-1.0.0.jar -DgroupId=com.rhomobile.rhoconnect  -DartifactId=rhoconnect-java -Dversion=1.0.0 -Dpackaging=jar
+	$ mvn install:install-file -Dfile=/path-to-jar/rhoconnect-java-1.0.1.jar -DgroupId=com.rhomobile.rhoconnect  -DartifactId=rhoconnect-java -Dversion=1.0.1 -Dpackaging=jar
 
 Now, the `rhoconnect-java` jar library is included into your Maven local repository.
 In the RhoconnectJavaSample application, you would add this code to the pom.xml file.
@@ -74,7 +74,7 @@ In the RhoconnectJavaSample application, you would add this code to the pom.xml 
 	<dependency>
     	<groupId>com.rhomobile.rhoconnect</groupId>
     	<artifactId>rhoconnect-java</artifactId>
-    	<version>1.0.0</version>
+    	<version>1.0.1</version>
     	<type>jar</type>
 	</dependency>
 
@@ -147,7 +147,7 @@ The `authenticate` bean will be called by rhoconnect server to authenticate user
     import java.util.Map;
 
     public interface Rhoconnect {
-        boolean authenticate(String login, String password, Map<String, Object> attributes);    
+	    String authenticate(String userName, String password, Map<String, Object> attributes);
     }
 
 For example:
@@ -164,9 +164,16 @@ For example:
 
         @Override
         public boolean authenticate(String login, String password, Map<String, Object> attributes) {
-            logger.info("ContactAuthenticate#authenticate: implement your authentication code!");
-            // TODO: your authentication code goes here ...
-            return true;
+			logger.debug("ContactAuthenticate#authenticate: implement your authentication code!");
+	        // TODO: your authentication code goes here ...		
+			// Return null value if authentication fails.
+
+			// Otherwise, returned value is data partitioning: i.e. user name for filtering data on per user basis
+			//return login;
+
+			// But if you want your data to be partitioned by ‘app’ (i.e. the data will be shared among all users),
+	        // you should return string "app": it will instruct Rhoconnect to partition the data accordingly.
+	        return "app";
         }
     }
 
@@ -184,7 +191,6 @@ You need to establish communication from the RhoConnect instance to your java ba
 		Integer rhoconnectCreate(String partition, Map<String, Object> attributes);
 		Integer rhoconnectUpdate(String partition, Map<String, Object> attributes);
 		Integer rhoconnetDelete(String partition, Map<String, Object> attributes);
-		String getPartition();
 	}
 
 To help rhoconnect-java plugin correctly do mapping of model name to service bean you should take into account the following conventions:
@@ -238,20 +244,20 @@ Example for `RhoconnectJavaSample` application:
 	    @Transactional
 	    public int addContact(Contact contact) {
 	        int id = contactDAO.addContact(contact);
-	        client.notifyOnCreate(sourceName, getPartition(), Integer.toString(id), contact);
+	        client.notifyOnCreate(sourceName, Integer.toString(id), contact);
 	        return id;
 	    }
 
 	    @Transactional
 	    public void updateContact(Contact contact) {
 	        contactDAO.updateContact(contact);
-	        client.notifyOnUpdate(sourceName, getPartition(), Integer.toString(contact.getId()), contact);       
+	        client.notifyOnUpdate(sourceName, Integer.toString(contact.getId()), contact);       
 	    }
 
 	    @Transactional
 	    public void removeContact(Integer id) {
 	        contactDAO.removeContact(id);
-	        client.notifyOnDelete(sourceName, getPartition(), Integer.toString(id));
+	        client.notifyOnDelete(sourceName, Integer.toString(id));
 	    }
 
 	    @Transactional
@@ -314,12 +320,6 @@ Example for `RhoconnectJavaSample` application:
 	        Integer id = Integer.parseInt(objId);
 	        removeContact(id);       
 	        return id;
-	    }
-
-	    @Override
-	    public String getPartition() {
-	        // Data partitioning: i.e. your user name for filtering data on per user basis 
-	        return "alexb";
 	    }
 	 }
 

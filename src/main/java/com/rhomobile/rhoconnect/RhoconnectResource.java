@@ -7,5 +7,4 @@ public interface RhoconnectResource {
 	Integer rhoconnectCreate(String partition, Map<String, Object> attributes);
 	Integer rhoconnectUpdate(String partition, Map<String, Object> attributes);
 	Integer rhoconnetDelete(String partition, Map<String, Object> attributes);
-	String getPartition();
 }

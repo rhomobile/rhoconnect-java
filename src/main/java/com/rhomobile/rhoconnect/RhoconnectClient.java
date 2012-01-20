@@ -1,7 +1,6 @@
 package com.rhomobile.rhoconnect;
 
 import java.util.*;
-
 import org.apache.log4j.Logger;
 import org.apache.commons.beanutils.PropertyUtils;
 
@@ -13,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-
 public class RhoconnectClient {
 	private static final Logger logger = Logger.getLogger(RhoconnectClient.class);	
 	private static final String RhoconnectControllerName = 
@@ -22,12 +20,13 @@ public class RhoconnectClient {
 	private String endpointUrl;
 	private String appEndpoint;
     private String apiToken;
+    private String userName;
+    private String partition;
     private RestTemplate restTemplate;
     
     public String getEndpointUrl() {
 		return endpointUrl;
 	}
-
     public void setEndpointUrl(String endpointUrl) {
 		this.endpointUrl = endpointUrl;
 	}
@@ -35,7 +34,6 @@ public class RhoconnectClient {
 	public String getAppEndpoint() {
 		return appEndpoint;
 	}
-
 	public void setAppEndpoint(String appEndpoint) {
 		this.appEndpoint = appEndpoint;
 	}
@@ -43,15 +41,24 @@ public class RhoconnectClient {
     public String getApiToken() {
 		return apiToken;
 	}
-
 	public void setApiToken(String apiToken) {
 		this.apiToken = apiToken;
+	}
+
+    public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	
+    public String getPartition() {
+    	return partition;
+    }
+    public void setPartion(String partition) {
+		this.partition = partition;
 	}
 
 	public void setRestTemplate(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 	}
-
 	public RestTemplate getRestTemplate() {
 		return restTemplate;
 	}
@@ -91,7 +98,7 @@ public class RhoconnectClient {
 	    setAppEndpoint();
 	}
 
-	public boolean notifyOnCreate(String sourceName, String partition, Object objId, Object object) {
+	public boolean notifyOnCreate(String sourceName, Object objId, Object object) {
 		// Ignore notification calls from RhoconnectController
 		if (stackTraceInclude(RhoconnectControllerName)) {
 			logger.info("Notifications from RhoconnectController ingnored");
@@ -102,10 +109,10 @@ public class RhoconnectClient {
 		objects.put((String)objId, daoToMap(object));
 		HashMap<String, Object> reqHash = new HashMap<String, Object>();
 		reqHash.put("objects", objects);
-		return sendObjects("push_objects", sourceName, partition, reqHash);
+		return sendObjects("push_objects", sourceName, reqHash);
 	}	
 	
-	public boolean notifyOnUpdate(String sourceName, String partition, Object objId, Object object) {
+	public boolean notifyOnUpdate(String sourceName, Object objId, Object object) {
 		// Ignore notification calls from RhoconnectController
 		if (stackTraceInclude(RhoconnectControllerName)) {
 			logger.info("Notifications from RhoconnectController ingnored");
@@ -116,10 +123,10 @@ public class RhoconnectClient {
 		objects.put((String)objId, daoToMap(object));			
 		HashMap<String, Object> reqHash = new HashMap<String, Object>();
 		reqHash.put("objects", objects);
-		return sendObjects("push_objects", sourceName, partition, reqHash);		
+		return sendObjects("push_objects", sourceName, reqHash);		
 	}	
 	
-	public boolean notifyOnDelete(String sourceName, String partition, Object objId) {
+	public boolean notifyOnDelete(String sourceName, Object objId) {
 		// Ignore notification calls from RhoconnectController
 		if (stackTraceInclude(RhoconnectControllerName)) {
 			logger.info("Notifications from RhoconnectController ingnored");
@@ -130,10 +137,10 @@ public class RhoconnectClient {
 		// Array of ids of objects to be deleted
 		Object [] deletes = { objId }; 
 		reqHash.put("objects", deletes);
-        return sendObjects("push_deletes", sourceName, partition, reqHash);	
+        return sendObjects("push_deletes", sourceName, reqHash);	
 	}
 
-	private boolean sendObjects(String method, String sourceName, String partition, HashMap<String, Object> hash) {
+	private boolean sendObjects(String method, String sourceName, HashMap<String, Object> hash) {
 		hash.put("api_token", apiToken);
 		hash.put("source_id", sourceName);
 		hash.put("user_id", partition);

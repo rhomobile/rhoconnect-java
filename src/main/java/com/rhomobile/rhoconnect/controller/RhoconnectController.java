@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.rhomobile.rhoconnect.Rhoconnect;
+import com.rhomobile.rhoconnect.RhoconnectClient;
 import com.rhomobile.rhoconnect.RhoconnectDispatcher;
 
 @Controller
@@ -27,6 +28,8 @@ public class RhoconnectController {
 	private RhoconnectDispatcher dispatcher; 
 	@Autowired
 	private Rhoconnect rhoconnect;
+	@Autowired
+	private RhoconnectClient client;
 
 	// POST /rhoconnect/authenticate
 	@RequestMapping(method=RequestMethod.POST, value="authenticate", headers="Accept=application/json")
@@ -38,11 +41,13 @@ public class RhoconnectController {
 		HttpHeaders responseHeaders = new HttpHeaders();
 	    responseHeaders.setContentType(MediaType.TEXT_PLAIN);
 	    
-	    boolean authorized = rhoconnect.authenticate(login, password, body);
-	    if(!authorized) // In case of error/exception return UNAUTHORIZED(401)
+	    String partition = rhoconnect.authenticate(login, password, body);
+	    if(partition == null) // In case of error/exception return UNAUTHORIZED(401)
 	    	return new ResponseEntity<String>("Authentication has failed", responseHeaders, HttpStatus.UNAUTHORIZED);
-		
-        return new ResponseEntity<String>(login, responseHeaders, HttpStatus.OK);
+
+	    client.setUserName(login);
+	    client.setPartion(partition);
+        return new ResponseEntity<String>(partition, responseHeaders, HttpStatus.OK);
     }
 
     // POST /rhoconnect/query
