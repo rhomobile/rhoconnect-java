@@ -163,7 +163,7 @@ For example:
         private static final Logger logger = Logger.getLogger(ContactAuthenticate.class);
 
         @Override
-        public boolean authenticate(String login, String password, Map<String, Object> attributes) {
+        public String authenticate(String login, String password, Map<String, Object> attributes) {
 			logger.debug("ContactAuthenticate#authenticate: implement your authentication code!");
 	        // TODO: your authentication code goes here ...		
 			// Return null value if authentication fails.
@@ -206,9 +206,9 @@ For more information about RhoConnect partitions, please refer to the [RhoConnec
 You also must to establish the communication from your java back-end application to the RhoConnect instance by auto-wiring `RhoconnectClient` bean into your DAO service class and inserting notifications hooks into data access (create/update/delete) methods. 
 `RhoconnectClient` bean is provided by rhoconnect-java plugin and responds to the following methods you have to call:
 
-* boolean notifyOnCreate(String sourceName, String partition, Object objId, Object object)
-* boolean notifyOnUpdate(String sourceName, String partition, Object objId, Object object)
-* boolean notifyOnDelete(String sourceName, String partition, Object objId)
+* boolean notifyOnCreate(String sourceName, Object objId, Object object)
+* boolean notifyOnUpdate(String sourceName, Object objId, Object object)
+* boolean notifyOnDelete(String sourceName, Object objId)
 
 Example for `RhoconnectJavaSample` application:
 
