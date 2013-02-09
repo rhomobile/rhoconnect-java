@@ -1,6 +1,4 @@
 target/*
-java-plugin/target/*
-java-api/target/*
 !.gitignore
 .classpath
 .project
@@ -9,6 +7,3 @@ java-api/target/*
 *.jar
 TODO
 bin/
-java-plugin/bin*
-java-api/bin/*
-
