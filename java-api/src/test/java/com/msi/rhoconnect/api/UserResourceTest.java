@@ -102,7 +102,7 @@ public class UserResourceTest {
 	
 	@Test
 	public void testClients() {
-		ClientResponse response = UserResource.clients(URL, token, "testuser1");
+		ClientResponse response = UserResource.listClients(URL, token, "testuser1");
 		assertTrue(200 == response.getStatus());
 		// "should handle empty client's list"
 		String body = response.getEntity(String.class);
@@ -111,7 +111,7 @@ public class UserResourceTest {
 		
 		 // "should list user's clients"
 		 // TODO: GET /application/clientcreate
-		 response = UserResource.clients(URL, token, "testuser1");
+		 response = UserResource.listClients(URL, token, "testuser1");
 		 assertTrue(200 == response.getStatus());
 		 body = response.getEntity(String.class);
 		 o = (JSONArray)JSONValue.parse(body);

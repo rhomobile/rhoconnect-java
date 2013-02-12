@@ -16,6 +16,7 @@ import com.sun.jersey.api.client.WebResource;
 public class StoreResource {
 	static String storeFormat = "%s/rc/v1/store/%s"; 
 
+	// Return content of a given document stored in Redis
 	public static ClientResponse get(String url, String token, String docname) {
 		Client client = Client.create();
 		String path = String.format(storeFormat, url, docname);
@@ -28,6 +29,9 @@ public class StoreResource {
 		return response;
 	}
 
+	// Sets the content of the specified server document. Data should be a string. 
+	// If append flag is set to true , the data is appended to the current doc (if it exists) 
+	// instead of replacing it.
 	public static ClientResponse set(String url, String token, String docname, String data, boolean append) {
 		JSONObject obj=new JSONObject();
 		obj.put("data", data);
@@ -37,7 +41,9 @@ public class StoreResource {
 		return set_db_doc(url, token, docname, content, append);		
 	}
 
-	// FIXME: JSONObject data? (hash of hashes)
+	// Sets the content of the specified server document. Data should be a hash of hashes. 
+	// If append flag is set to true , the data is appended to the current doc (if it exists) 
+	// instead of replacing it.
 	public static ClientResponse set(String url, String token, String docname, JSONObject data, boolean append) {
 		JSONObject obj=new JSONObject();
 		obj.put("data", data);
