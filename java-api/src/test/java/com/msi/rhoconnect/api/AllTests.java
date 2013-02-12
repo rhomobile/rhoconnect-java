@@ -5,9 +5,15 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ ClientResourceTest.class, PluginResourceTest.class,
-		SourceResourceTest.class, StoreResourceTest.class,
-		SystemResourceTest.class, UserResourceTest.class })
+@SuiteClasses({ 
+		ClientResourceTest.class, 
+		PluginResourceTest.class,
+		SourceResourceTest.class, 
+		StoreResourceTest.class,
+		SystemResourceTest.class, 
+		UserResourceTest.class,
+		ReadStateResourceTest.class })
+
 public class AllTests {
 
 }

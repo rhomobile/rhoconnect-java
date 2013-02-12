@@ -27,5 +27,6 @@ public class TestRunner {
 	    junit.run(UserResourceTest.class);	    
 	    junit.run(ClientResourceTest.class);
 	    junit.run(SystemResourceTest.class);
+	    junit.run(ReadStateResourceTest.class);
 	}
 }
