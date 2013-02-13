@@ -13,16 +13,26 @@ import org.junit.Test;
 import com.msi.rhoconnect.api.StoreResource;
 import com.sun.jersey.api.client.ClientResponse;
 
+import org.junit.Rule;
+import org.junit.ClassRule;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
 public class StoreResourceTest {
-	static String URL = "http://localhost:9292";
-	static String api_token;
+	@ClassRule
+	@Rule
+	public static WireMockRule wireMockRule = new WireMockRule(8089);
+	static String URL = "http://localhost:8089";
+//	static String api_token;
 	
 	String token;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		api_token = Helper.getToken(URL);
-		Helper.reset(URL, api_token);
+//		api_token = Helper.getToken(URL);
+//		Helper.reset(URL, api_token);
 	}
 
 	@AfterClass
@@ -31,7 +41,8 @@ public class StoreResourceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		token = api_token;
+		token = "my-rhoconnect-token";
+//		token = api_token;
 	}
 
 	@After
@@ -40,7 +51,14 @@ public class StoreResourceTest {
 
 	@Test
 	public void testGet() {
-		String docname = "api_token:" + token + ":value";		
+		String docname = "api_token:" + token + ":value";
+		String url = String.format("/rc/v1/store/%s", docname);
+		stubFor(get(urlEqualTo(url))
+				.withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
+						.willReturn(aResponse()
+			                .withStatus(200)
+			                .withHeader("Content-Type", "application/json")
+			                .withBody(token)));
 		ClientResponse response = StoreResource.get(URL, token, docname);
 		assertEquals("Response code", 200, response.getStatus());
 		String body = response.getEntity(String.class);
@@ -51,9 +69,26 @@ public class StoreResourceTest {
 	public void testSet() {
 		String docname = "abc:abc";		
 		String doc = "some string";
+
+		String url = String.format("/rc/v1/store/%s", docname);
+		stubFor(post(urlEqualTo(url))
+				.withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
+				.withHeader("Content-Type", equalTo("application/json"))
+						.willReturn(aResponse()
+			                .withStatus(200)
+			                .withHeader("Content-Type", "application/json")
+			                .withBody("")));
+		
 		ClientResponse response = StoreResource.set(URL, token, docname, doc, false);
 		assertEquals("Response code", 200, response.getStatus());
 
+		stubFor(get(urlEqualTo(url))
+				.withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
+						.willReturn(aResponse()
+			                .withStatus(200)
+			                .withHeader("Content-Type", "application/json")
+			                .withBody(doc)));
+		
 		response = StoreResource.get(URL, token, docname);
 		assertEquals("Response code", 200, response.getStatus());
 		String body = response.getEntity(String.class);
@@ -61,31 +96,31 @@ public class StoreResourceTest {
 		
 		// "should append data in set db document by doc name and data"
 		// data = {'1' => {'foo' => 'bar'}}
-		JSONObject obj = new JSONObject();
-		obj.put("foo", "bar");
-		JSONObject data = new JSONObject();
-		data.put("1", obj);
-		// data2 = {'2' => {'foo1' => 'bar1'}}
-		JSONObject obj2 = new JSONObject();
-		obj2.put("foo1", "bar1");		
-		JSONObject data2 = new JSONObject();
-		data2.put("2", obj2);
-		
-		JSONObject data3 = new JSONObject();
-		data3.putAll(data);
-		data3.putAll(data2);
-		
-		response = StoreResource.set(URL, token, docname, data, false);
-		assertEquals("Response code", 200, response.getStatus());
-		//response = StoreResource.get(URL, token, docname);
-		//String body = response.getEntity(String.class);
-		//assertEquals("should set db document by doc name, and data", JSONObject.toJSONString(data), body);
-		response = StoreResource.set(URL, token, docname, data2, true);
-		assertEquals("Response code", 200, response.getStatus());
-
-		response = StoreResource.get(URL, token, docname);
-		String body3 = response.getEntity(String.class);
-		assertEquals("should append data in set db document by doc name and data", JSONValue.parse(body3), data3);
+//		JSONObject obj = new JSONObject();
+//		obj.put("foo", "bar");
+//		JSONObject data = new JSONObject();
+//		data.put("1", obj);
+//		// data2 = {'2' => {'foo1' => 'bar1'}}
+//		JSONObject obj2 = new JSONObject();
+//		obj2.put("foo1", "bar1");		
+//		JSONObject data2 = new JSONObject();
+//		data2.put("2", obj2);
+//		
+//		JSONObject data3 = new JSONObject();
+//		data3.putAll(data);
+//		data3.putAll(data2);
+//		
+//		response = StoreResource.set(URL, token, docname, data, false);
+//		assertEquals("Response code", 200, response.getStatus());
+//		//response = StoreResource.get(URL, token, docname);
+//		//String body = response.getEntity(String.class);
+//		//assertEquals("should set db document by doc name, and data", JSONObject.toJSONString(data), body);
+//		response = StoreResource.set(URL, token, docname, data2, true);
+//		assertEquals("Response code", 200, response.getStatus());
+//
+//		response = StoreResource.get(URL, token, docname);
+//		String body3 = response.getEntity(String.class);
+//		assertEquals("should append data in set db document by doc name and data", JSONValue.parse(body3), data3);
 	}
 
 }

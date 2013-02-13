@@ -16,19 +16,26 @@ import com.msi.rhoconnect.api.StoreResource;
 import com.msi.rhoconnect.api.UserResource;
 import com.sun.jersey.api.client.ClientResponse;
 
+import org.junit.Rule;
+import org.junit.ClassRule;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
 public class PluginResourceTest {
-	static String URL = "http://localhost:9292";
-	static String api_token;
-	
+	@ClassRule
+	@Rule
+	public static WireMockRule wireMockRule = new WireMockRule(8089);
+	static String URL = "http://localhost:8089";
 	String token;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		api_token = Helper.getToken(URL);
-		Helper.reset(URL, api_token);
-		
-		ClientResponse response = UserResource.create(URL, api_token, "testuser1", "testpass1");
-		assertEquals("Status code", 200, response.getStatus());
+//		api_token = Helper.getToken(URL);
+//		Helper.reset(URL, api_token);		
+//		ClientResponse response = UserResource.create(URL, api_token, "testuser1", "testpass1");
+//		assertEquals("Status code", 200, response.getStatus());
 	}
 
 	@AfterClass
@@ -37,7 +44,8 @@ public class PluginResourceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		token = api_token;
+		token = "my-rhoconnect-token";
+//		token = api_token;
 	}
 
 	@After
@@ -56,24 +64,34 @@ public class PluginResourceTest {
 		product.put("price", "249.99");
 		data.put("1", product);
 		
-		ClientResponse response = PluginResource.pushObjects(URL, token, "testuser1", "RhoInternalBenchmarkAdapter", data);
+		// POST /app/v1/:source_name/push_objects
+		String url = String.format("/app/v1/%s/push_objects", "Product");
+		stubFor(post(urlEqualTo(url))
+				.withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
+				.withHeader("Content-Type", equalTo("application/json"))
+						.willReturn(aResponse()
+			                .withStatus(200)
+			                .withHeader("Content-Type", "application/json")
+			                .withBody("")));
+		
+		ClientResponse response = PluginResource.pushObjects(URL, token, "testuser1", "Product", data);
 		assertEquals("Response code", 200, response.getStatus());
 
-		response = UserResource.sourcesDocnames(URL, token, "testuser1", "RhoInternalBenchmarkAdapter");
-		assertEquals("Status code", 200, response.getStatus());
-		String body = response.getEntity(String.class);
-		JSONObject o = (JSONObject)JSONValue.parse(body);
-		assertTrue(o.get("md") != null);
-		assertTrue(o.get("md_size") != null);
-		String mdsize = (String)o.get("md_size");
-		response = StoreResource.get(URL, token, mdsize);
-		assertTrue(Integer.parseInt(response.getEntity(String.class)) == 1);		
-		
-		String mdname = (String)o.get("md");
-		response = StoreResource.get(URL, token, mdname);
-		assertEquals("Response code", 200, response.getStatus());
-		body = response.getEntity(String.class);
-		assertEquals("Verify doc result", data, JSONValue.parse(body));
+//		response = UserResource.sourcesDocnames(URL, token, "testuser1", "RhoInternalBenchmarkAdapter");
+//		assertEquals("Status code", 200, response.getStatus());
+//		String body = response.getEntity(String.class);
+//		JSONObject o = (JSONObject)JSONValue.parse(body);
+//		assertTrue(o.get("md") != null);
+//		assertTrue(o.get("md_size") != null);
+//		String mdsize = (String)o.get("md_size");
+//		response = StoreResource.get(URL, token, mdsize);
+//		assertTrue(Integer.parseInt(response.getEntity(String.class)) == 1);		
+//		
+//		String mdname = (String)o.get("md");
+//		response = StoreResource.get(URL, token, mdname);
+//		assertEquals("Response code", 200, response.getStatus());
+//		body = response.getEntity(String.class);
+//		assertEquals("Verify doc result", data, JSONValue.parse(body));
 	}
 
 	@Test
@@ -81,18 +99,28 @@ public class PluginResourceTest {
 		// "should delete object from :md"
 		JSONArray list = new JSONArray();
 		list.add("1");
+
+		String url = String.format("/app/v1/%s/push_deletes", "Product");
+		stubFor(post(urlEqualTo(url))
+				.withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
+				.withHeader("Content-Type", equalTo("application/json"))
+						.willReturn(aResponse()
+			                .withStatus(200)
+			                .withHeader("Content-Type", "application/json")
+			                .withBody("")));
 		
-		ClientResponse response = PluginResource.deleteObjects(URL, token, "testuser1", "RhoInternalBenchmarkAdapter", list);
+		ClientResponse response = PluginResource.deleteObjects(URL, token, "testuser1", "Product", list);
 		assertEquals("Response code", 200, response.getStatus());
-		response = UserResource.sourcesDocnames(URL, token, "testuser1", "RhoInternalBenchmarkAdapter");
-		assertEquals("Status code", 200, response.getStatus());
-		String body = response.getEntity(String.class);
-		JSONObject o = (JSONObject)JSONValue.parse(body);
-		assertTrue(o.get("md") != null);
-		assertTrue(o.get("md_size") != null);
-		String mdsize = (String)o.get("md_size");
-		response = StoreResource.get(URL, token, mdsize);
-		assertTrue(Integer.parseInt(response.getEntity(String.class)) == 0);		
+		
+//		response = UserResource.sourcesDocnames(URL, token, "testuser1", "RhoInternalBenchmarkAdapter");
+//		assertEquals("Status code", 200, response.getStatus());
+//		String body = response.getEntity(String.class);
+//		JSONObject o = (JSONObject)JSONValue.parse(body);
+//		assertTrue(o.get("md") != null);
+//		assertTrue(o.get("md_size") != null);
+//		String mdsize = (String)o.get("md_size");
+//		response = StoreResource.get(URL, token, mdsize);
+//		assertTrue(Integer.parseInt(response.getEntity(String.class)) == 0);		
 	}
 
 }
