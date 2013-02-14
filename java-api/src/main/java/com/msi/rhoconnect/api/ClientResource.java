@@ -55,7 +55,7 @@ public class ClientResource {
 	
 
 	// Sets the content of the specified source document for the given client. 
-	// Data should be either a string or hash of hashes. If append flag is set to true , 
+	// Data should be either a string or hash of hashes. If append flag is set to true, 
 	// the data is appended to the current doc (if it exists) instead of replacing it.
 	public static ClientResponse setSourcesDocnames(String url, String token, String clientId, String sourceId, 
 			String data, boolean append) {
