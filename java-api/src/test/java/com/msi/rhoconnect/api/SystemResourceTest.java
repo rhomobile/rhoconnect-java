@@ -18,7 +18,6 @@ import org.junit.Rule;
 import org.junit.ClassRule;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class SystemResourceTest {
