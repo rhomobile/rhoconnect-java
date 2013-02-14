@@ -38,6 +38,38 @@ public class SystemResourceTest {
 
 	@Before
 	public void setUp() throws Exception {
+		stubFor(post(urlEqualTo("/rc/v1/system/login"))
+	             .withHeader("Content-Type", equalTo("application/json"))
+					.willReturn(aResponse()
+		                .withStatus(200)
+		                .withBody("my-rhoconnect-token")));
+		stubFor(post(urlEqualTo("/rc/v1/system/reset"))
+				.withHeader("Content-Type", equalTo("application/json"))
+		        .withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
+					.willReturn(aResponse()
+		                .withStatus(200)
+		                .withBody("DB reset")));
+		stubFor(get(urlEqualTo("/rc/v1/system/license"))
+		        .withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
+				.willReturn(aResponse()
+	                .withStatus(200)
+	                .withHeader("Content-Type", "application/json")
+	                .withBody("{\"rhoconnect_version\":\"Version 1\",\"licensee\":\"Rhomobile\",\"seats\":10,\"issued\":\"Fri Apr 23 17:20:13 -0700 2010\",\"available\":10}")));
+			
+		stubFor(post(urlEqualTo("/rc/v1/system/appserver"))
+				.withHeader("Content-Type", equalTo("application/json"))
+			    .withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
+					.willReturn(aResponse()
+		                .withStatus(200)
+		                .withHeader("Content-Type", "application/json")
+		                .withBody("{\"adapter_url\":\"http://localhost:3000\"}")));
+		stubFor(get(urlEqualTo("/rc/v1/system/appserver"))
+			    .withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
+					.willReturn(aResponse()
+		                .withStatus(200)
+		                .withHeader("Content-Type", "application/json")
+		                .withBody("{\"adapter_url\":\"http://localhost:3000\"}")));
+			
 	}
 
 	@After
@@ -46,12 +78,6 @@ public class SystemResourceTest {
 
 	@Test
 	public void testLogin() {
-		stubFor(post(urlEqualTo("/rc/v1/system/login"))
-             .withHeader("Content-Type", equalTo("application/json"))
-				.willReturn(aResponse()
-	                .withStatus(200)
-	                .withBody("my-rhoconnect-token")));
-
 		ClientResponse response = SystemResource.login(URL, "");
 		assertEquals("Response code", 200, response.getStatus());
 		String token = response.getEntity(String.class);
@@ -60,13 +86,6 @@ public class SystemResourceTest {
 
 	@Test
 	public void testReset() {
-		stubFor(post(urlEqualTo("/rc/v1/system/reset"))
-			.withHeader("Content-Type", equalTo("application/json"))
-	        .withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
-				.willReturn(aResponse()
-	                .withStatus(200)
-	                .withBody("DB reset")));
-		
 		ClientResponse response = SystemResource.reset(URL, token);
 		assertEquals("Response code", 200, response.getStatus());
 		String body = response.getEntity(String.class);
@@ -76,60 +95,22 @@ public class SystemResourceTest {
 	
 	@Test
 	public void testLicense() {
-		stubFor(get(urlEqualTo("/rc/v1/system/license"))
-		        .withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
-				.willReturn(aResponse()
-	                .withStatus(200)
-	                .withHeader("Content-Type", "application/json")
-	                .withBody("{\"rhoconnect_version\":\"Version 1\",\"licensee\":\"Rhomobile\",\"seats\":10,\"issued\":\"Fri Apr 23 17:20:13 -0700 2010\",\"available\":10}")));
 		
 		ClientResponse response = SystemResource.license(URL, token);
 		assertEquals("Response code", 200, response.getStatus());
 		String body = response.getEntity(String.class);
-		//System.out.println(body); // => 
-		// {"rhoconnect_version":"Version 1","licensee":"Rhomobile","seats":10,"issued":"Fri Apr 23 17:20:13 -0700 2010","available":10}
 		JSONObject o = (JSONObject)JSONValue.parse(body);
 		assertEquals("rhoconnect_version", "Version 1", o.get("rhoconnect_version"));
 		assertEquals("licensee", "Rhomobile", o.get("licensee"));
 		assertEquals("seats", new Long(10), o.get("seats"));
 		assertEquals("issued", "Fri Apr 23 17:20:13 -0700 2010", o.get("issued"));
 	}
-
-//	@Test
-//	public void testGetAppServer() {
-//		stubFor(get(urlEqualTo("/rc/v1/system/appserver"))
-//				.willReturn(aResponse()
-//	                .withStatus(200)
-//	                .withHeader("Content-Type", "application/json")
-//	                .withHeader("X-RhoConnect-API-TOKEN", token)
-//	                .withBody("{\"adapter_url\":http://localhost:3000}")));
-//		
-//		// /rc/v1/system/appserver
-//		ClientResponse response = SystemResource.getAppserver(URL, token);
-//		assertEquals("Response code", 200, response.getStatus());
-//		String body = response.getEntity(String.class);
-//		System.out.println(body); // => {"adapter_url":null}
-//	}
 	
 	@Test
 	public void testSetAppServer() {
-		stubFor(post(urlEqualTo("/rc/v1/system/appserver"))
-			.withHeader("Content-Type", equalTo("application/json"))
-		    .withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
-				.willReturn(aResponse()
-	                .withStatus(200)
-	                .withHeader("Content-Type", "application/json")
-	                .withBody("{\"adapter_url\":\"http://localhost:3000\"}")));
-		
 		ClientResponse response = SystemResource.setAppserver(URL, token, "http://localhost:3000");
 		assertEquals("Response code", 200, response.getStatus());
 
-		stubFor(get(urlEqualTo("/rc/v1/system/appserver"))
-		    .withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
-				.willReturn(aResponse()
-	                .withStatus(200)
-	                .withHeader("Content-Type", "application/json")
-	                .withBody("{\"adapter_url\":\"http://localhost:3000\"}")));
 		response = SystemResource.getAppserver(URL, token);
 		String body = response.getEntity(String.class);
 		Object obj=JSONValue.parse(body);

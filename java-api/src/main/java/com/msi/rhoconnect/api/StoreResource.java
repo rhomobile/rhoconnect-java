@@ -19,6 +19,7 @@ public class StoreResource {
 	// Return content of a given document stored in Redis
 	public static ClientResponse get(String url, String token, String docname) {
 		Client client = Client.create();
+		// GET /rc/v1/store/:doc
 		String path = String.format(storeFormat, url, docname);
 		WebResource webResource = client.resource(path); 
 
@@ -33,11 +34,12 @@ public class StoreResource {
 	// If append flag is set to true , the data is appended to the current doc (if it exists) 
 	// instead of replacing it.
 	public static ClientResponse set(String url, String token, String docname, String data, boolean append) {
-		JSONObject obj=new JSONObject();
+		JSONObject obj= new JSONObject();
 		obj.put("data", data);
 		obj.put("append", new Boolean(append));
 		String content = JSONObject.toJSONString(obj);
 		
+		// POST /rc/v1/store/:doc
 		return set_db_doc(url, token, docname, content, append);		
 	}
 
@@ -45,16 +47,18 @@ public class StoreResource {
 	// If append flag is set to true , the data is appended to the current doc (if it exists) 
 	// instead of replacing it.
 	public static ClientResponse set(String url, String token, String docname, JSONObject data, boolean append) {
-		JSONObject obj=new JSONObject();
+		JSONObject obj= new JSONObject();
 		obj.put("data", data);
 		obj.put("append", new Boolean(append));
 		String content = JSONObject.toJSONString(obj);
 
+		// POST /rc/v1/store/:doc
 		return set_db_doc(url, token, docname, content, append);		
 	}
 	
 	private static ClientResponse set_db_doc(String url, String token, String docname, String jsonString, boolean append) {
 		Client client = Client.create();
+		// POST /rc/v1/store/:doc
 		String path = String.format(storeFormat, url, docname);
 		WebResource webResource = client.resource(path);
 		

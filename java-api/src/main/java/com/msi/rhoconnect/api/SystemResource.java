@@ -47,7 +47,6 @@ public class SystemResource {
 		WebResource webResource = client.resource(path); 
 
 		String data = "{}";
-		// TODO: 
 		ClientResponse response = webResource.type("application/json")
 			.header("X-RhoConnect-API-TOKEN", token)
 			.post(ClientResponse.class, data);

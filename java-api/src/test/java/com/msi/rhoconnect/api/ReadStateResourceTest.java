@@ -17,7 +17,6 @@ import org.junit.Rule;
 import org.junit.ClassRule;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class ReadStateResourceTest {
@@ -25,16 +24,16 @@ public class ReadStateResourceTest {
 	@Rule
 	public static WireMockRule wireMockRule = new WireMockRule(8089);
 	static String URL = "http://localhost:8089";
-//	static String api_token;
+	//static String api_token;
 	
 	String token;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-//		api_token = Helper.getToken(URL);
-//		Helper.reset(URL, api_token);
-//		ClientResponse response = UserResource.create(URL, api_token, "testuser1", "testpass1");
-//		assertEquals("Status code", 200, response.getStatus());
+		//api_token = Helper.getToken(URL);
+		//Helper.reset(URL, api_token);
+		//ClientResponse response = UserResource.create(URL, api_token, "testuser1", "testpass1");
+		//assertEquals("Status code", 200, response.getStatus());
 	}
 
 	@AfterClass
@@ -43,16 +42,8 @@ public class ReadStateResourceTest {
 
 	@Before
 	public void setUp() throws Exception {
-//		token = api_token;
+		//token = api_token;
 		token = "my-rhoconnect-token";
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-	
-	@Test
-	public void testSetPollInterval() {
 		String url = String.format("/rc/v1/readstate/users/%s/sources/%s", "testuser1", "RhoInternalBenchmarkAdapter");
 		stubFor(put(urlEqualTo(url))
 				.withHeader("Content-Type", equalTo("application/json"))
@@ -61,6 +52,14 @@ public class ReadStateResourceTest {
 		                .withStatus(200)
 		                .withBody("")));
 		
+	}
+
+	@After
+	public void tearDown() throws Exception {
+	}
+	
+	@Test
+	public void testSetPollInterval() {
 		ClientResponse response = ReadStateResource.setPollInterval(URL, token, "testuser1", "RhoInternalBenchmarkAdapter", new Integer(100));
 		assertEquals("Response code", 200, response.getStatus());
 		//String body = response.getEntity(String.class);

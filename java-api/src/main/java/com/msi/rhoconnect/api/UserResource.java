@@ -13,6 +13,7 @@ public class UserResource {
 	// List users registered with this RhoConnect application
 	public static ClientResponse list(String url, String token) {
 		Client client = Client.create();
+		// GET /rc/v1/users
 		String path = String.format("%s/rc/v1/users", url);
 		WebResource webResource = client.resource(path);
 		
@@ -25,6 +26,7 @@ public class UserResource {
 	// Create a user in this RhoConnect application
 	public static ClientResponse create(String url, String token, String login, String password) {
 		Client client = Client.create();
+		// POST /rc/v1/users
 		String path = String.format("%s/rc/v1/users", url);
 		WebResource webResource = client.resource(path);
 		
@@ -40,6 +42,7 @@ public class UserResource {
 	// Delete User and all associated devices from the RhoConnect application
 	public static ClientResponse delete(String url, String token, String userId) {
 		Client client = Client.create();
+		// DELETE /rc/v1/users/:user_id
 		String path = String.format("%s/rc/v1/users/%s", url, userId);
 		WebResource webResource = client.resource(path);
 				
@@ -54,6 +57,7 @@ public class UserResource {
 	// {:a_user_specific_attribute => a_user_specific_attribute_value} 
 	public static ClientResponse update(String url, String token, String userId, JSONObject userAttributes) {
 		Client client = Client.create();
+		// PUT /rc/v1/users/:user_id
 		String path = String.format("%s/rc/v1/users/%s", url, userId);
 		WebResource webResource = client.resource(path);
 		
@@ -70,6 +74,7 @@ public class UserResource {
 	// Returns the information for the specified user
 	public static ClientResponse show(String url, String token, String userId) {
 		Client client = Client.create();
+		// GET /rc/v1/users/:user_id
 		String path = String.format("%s/rc/v1/users/%s", url, userId);
 		WebResource webResource = client.resource(path);
 		
@@ -82,6 +87,7 @@ public class UserResource {
 	// List clients (devices) associated with given user
 	public static ClientResponse listClients(String url, String token, String userId) {
 		Client client = Client.create();
+		// GET /rc/v1/users/:user_id/clients
 		String path = String.format("%s/rc/v1/users/%s/clients", url, userId);
 		WebResource webResource = client.resource(path);
 		
@@ -94,6 +100,7 @@ public class UserResource {
 	// Deletes the specified client (device) for the given user
 	public static ClientResponse deleteClient(String url, String token, String userId, String clientId) {
 		Client client = Client.create();
+		// DELETE /rc/v1/users/:user_id/clients/:client_id
 		String path = String.format("%s/rc/v1/users/%s/clients/%s", url, userId, clientId);
 		WebResource webResource = client.resource(path);
 		
@@ -107,6 +114,7 @@ public class UserResource {
 	// If userId set to '*', this call will return list of keys for 'shared' documents.
 	public static ClientResponse sourcesDocnames(String url, String token, String userId, String sources) {
 		Client client = Client.create();
+		// GET /rc/v1/users/:user_id/sources/:source_id/docnames
 		String path = String.format("%s/rc/v1/users/%s/sources/%s/docnames", url, userId, sources);
 		WebResource webResource = client.resource(path);
 
@@ -119,6 +127,7 @@ public class UserResource {
 	// Sends PUSH message to all devices of the specified user(s)
 	public static ClientResponse ping(String url, String token, JSONObject pingParams) {
 		Client client = Client.create();
+		// POST /rc/v1/users/ping
 		String path = String.format("%s/rc/v1/users/ping", url);
 		WebResource webResource = client.resource(path);
 
@@ -132,6 +141,7 @@ public class UserResource {
 	// Return content of a given source document for the specified user
 	public static ClientResponse getSourcesDocs(String url, String token, String userId, String sourceId, String docname) {
 		Client client = Client.create();
+		// GET /rc/v1/users/:user_id/sources/:source_id/docs/:doc
 		String path = String.format("%s/rc/v1/users/%s/sources/%s/docs/%s", url, userId, sourceId, docname);
 		WebResource webResource = client.resource(path);
 		
@@ -152,6 +162,7 @@ public class UserResource {
 		obj.put("append", new Boolean(append));
 		String content = JSONObject.toJSONString(obj);
 
+		// POST /rc/v1/users/:user_id/sources/:source_id/docs/:doc
 		return set_source_docs(url, token, userId, sourceId, docname, content, append);
 	}
 	
@@ -166,12 +177,14 @@ public class UserResource {
 		obj.put("append", new Boolean(append));
 		String content = JSONObject.toJSONString(obj);
 
+		// POST /rc/v1/users/:user_id/sources/:source_id/docs/:doc
 		return set_source_docs(url, token, userId, sourceId, docname, content, append);
 	}
 	
 	private static ClientResponse set_source_docs(String url, String token, String userId, String sourceId,
 			String docname, String jsonData, boolean append) {
 		Client client = Client.create();
+		// POST /rc/v1/users/:user_id/sources/:source_id/docs/:doc
 		String path = String.format("%s/rc/v1/users/%s/sources/%s/docs/%s", url, userId, sourceId, docname);
 		// System.out.println(jsonData);
 		

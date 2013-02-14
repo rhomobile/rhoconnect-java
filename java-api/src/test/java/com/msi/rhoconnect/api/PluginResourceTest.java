@@ -20,7 +20,6 @@ import org.junit.Rule;
 import org.junit.ClassRule;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class PluginResourceTest {
@@ -32,20 +31,40 @@ public class PluginResourceTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-//		api_token = Helper.getToken(URL);
-//		Helper.reset(URL, api_token);		
-//		ClientResponse response = UserResource.create(URL, api_token, "testuser1", "testpass1");
-//		assertEquals("Status code", 200, response.getStatus());
+		//api_token = Helper.getToken(URL);
+		//Helper.reset(URL, api_token);		
+		//ClientResponse response = UserResource.create(URL, api_token, "testuser1", "testpass1");
+		//assertEquals("Status code", 200, response.getStatus());
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		//wireMockRule.stopServer(); 
 	}
 
 	@Before
 	public void setUp() throws Exception {
 		token = "my-rhoconnect-token";
-//		token = api_token;
+		//token = api_token;
+
+		// POST /app/v1/:source_name/push_objects
+		String url = String.format("/app/v1/%s/push_objects", "Product");
+		stubFor(post(urlEqualTo(url))
+				.withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
+				.withHeader("Content-Type", equalTo("application/json"))
+						.willReturn(aResponse()
+			                .withStatus(200)
+			                .withHeader("Content-Type", "application/json")
+			                .withBody("")));
+		// POST /app/v1/:source_name/push_deletes
+		url = String.format("/app/v1/%s/push_deletes", "Product");
+		stubFor(post(urlEqualTo(url))
+				.withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
+				.withHeader("Content-Type", equalTo("application/json"))
+						.willReturn(aResponse()
+			                .withStatus(200)
+			                .withHeader("Content-Type", "application/json")
+			                .withBody("")));	
 	}
 
 	@After
@@ -63,16 +82,6 @@ public class PluginResourceTest {
 		product.put("brand", "Android");
 		product.put("price", "249.99");
 		data.put("1", product);
-		
-		// POST /app/v1/:source_name/push_objects
-		String url = String.format("/app/v1/%s/push_objects", "Product");
-		stubFor(post(urlEqualTo(url))
-				.withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
-				.withHeader("Content-Type", equalTo("application/json"))
-						.willReturn(aResponse()
-			                .withStatus(200)
-			                .withHeader("Content-Type", "application/json")
-			                .withBody("")));
 		
 		ClientResponse response = PluginResource.pushObjects(URL, token, "testuser1", "Product", data);
 		assertEquals("Response code", 200, response.getStatus());
@@ -99,15 +108,6 @@ public class PluginResourceTest {
 		// "should delete object from :md"
 		JSONArray list = new JSONArray();
 		list.add("1");
-
-		String url = String.format("/app/v1/%s/push_deletes", "Product");
-		stubFor(post(urlEqualTo(url))
-				.withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
-				.withHeader("Content-Type", equalTo("application/json"))
-						.willReturn(aResponse()
-			                .withStatus(200)
-			                .withHeader("Content-Type", "application/json")
-			                .withBody("")));
 		
 		ClientResponse response = PluginResource.deleteObjects(URL, token, "testuser1", "Product", list);
 		assertEquals("Response code", 200, response.getStatus());

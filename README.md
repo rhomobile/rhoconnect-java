@@ -8,15 +8,16 @@ Using the RhoConnect-Java plugin, your [Spring 3 MVC](http://www.springsource.or
 ## Prerequisites
 
 * Java (1.6)
-* Maven2 (2.2.1)
+* Maven
 * Git
-* [Rhoconncect-java](https://github.com/downloads/rhomobile/rhoconnect-java/rhoconnect-java-1.0.1.jar) plugin jar file
+* [rhoconnect-java](https://s3.amazonaws.com/rhoconnect-java/rhoconnect-java-1.0.2.jar) RhoConnect Java plugin jar
+* [rhoconnect-java-api](https://s3.amazonaws.com/rhoconnect-java/rhoconnect-java-api-1.0.0.jar) RhoConnect Java API jar
 
 ## Getting started
 
-We assume that you have a complete java end-to-end application using Spring 3.0 MVC as the front end technology and Hibernate as backend ORM. For this application we will also use Maven2 for build and dependency management and some database to persist the data. The database is accessed by a Data Access (DAO) layer.
+We assume that you have a complete java end-to-end application using Spring 3.0 MVC as the front end technology and Hibernate as backend ORM. For this application we will also use Maven for build and dependency management and some database to persist the data. The database is accessed by a Data Access (DAO) layer.
 
-Copy [Rhoconncect-java](https://github.com/downloads/rhomobile/rhoconnect-java/rhoconnect-java-1.0.1.jar) plugin jar file to your PC.
+Copy [rhoconnect-java](https://s3.amazonaws.com/rhoconnect-java/rhoconnect-java-1.0.2.jar) and [rhoconnect-java-api](https://s3.amazonaws.com/rhoconnect-java/rhoconnect-java-api-1.0.0.jar) jar files to your PC.
 You can also create target rhoconnect-java plugin jar from sources by cloning rhoconnect-java repository 
 
     :::term
@@ -25,17 +26,15 @@ You can also create target rhoconnect-java plugin jar from sources by cloning rh
 and executing in cloned project directory the following commands:
 
     :::term
-    $ mvn clean
-    $ mvn compile
-    $ mvn jar:jar
+	$ mvn package
 
-The archived rhoconnect-java-x.y.z.jar file will be created in the project target/ directory.
+The archived rhoconnect-java-x.y.z.jar file will be created in the project java-plugin/target/ directory. The accompanying rhoconnect-java-api-x.y.z.jar file will be created in the project java-api/target/ directory. 
 
 For testing and evaluation purposes you can use [RhoconnectJavaSample](https://github.com/shurab/RhoconnectJavaSample) application as a starting point before continuing with the following steps. 
 
-### Adding Dependencies to Your Maven 2 Project
+### Adding Dependencies to Your Maven Project
 
-Add dependencies to your Apache Maven 2 project object model (POM): log4j, Apache common beanutils, and Jackson JSON mapper. In the RhoconnectJavaSample application, this code is in the pom.xml file.
+Add dependencies to your Apache Maven project object model (POM): log4j, Apache common beanutils, and Jackson JSON mapper. In the RhoconnectJavaSample application, this code is in the pom.xml file.
 
     :::xml
     <!-- Log4j -->
@@ -60,11 +59,13 @@ Add dependencies to your Apache Maven 2 project object model (POM): log4j, Apach
         <optional>false</optional>  
     </dependency>
 
-You must also add the rhoconnect-java jar to your Maven 2 project. At this moment rhoconnect-plugin jar is not available in Maven public repositories and you need install the jar manually into your Maven's local repository.
-Download the `rhoconnect-java-1.0.0.jar` jar file and put it into your hard drive, and issue the following Maven's command:
+You must also add the rhoconnect-java and rhoconnect-java-api jars to your Maven project. At this moment they are not available in Maven public repositories and you need install the jar manually into your Maven's local repository.
 
     :::term
-	$ mvn install:install-file -Dfile=/path-to-jar/rhoconnect-java-1.0.1.jar -DgroupId=com.rhomobile.rhoconnect  -DartifactId=rhoconnect-java -Dversion=1.0.1 -Dpackaging=jar
+	$ mvn install:install-file -Dfile=/path-to-jar/rhoconnect-java-api-1.0.0.jar -DgroupId=com.msi.rhoconnect.api \
+	  -DartifactId=rhoconnect-java-api -Dversion=1.0.0 -Dpackaging=jar
+	$ mvn install:install-file -Dfile=/path-to-jar/rhoconnect-java-1.0.2.jar \
+	  -DgroupId=com.rhomobile.rhoconnect  -DartifactId=rhoconnect-java -Dversion=1.0.2 -Dpackaging=jar
 
 Now, the `rhoconnect-java` jar library is included into your Maven local repository.
 In the RhoconnectJavaSample application, you would add this code to the pom.xml file.
@@ -77,7 +78,24 @@ In the RhoconnectJavaSample application, you would add this code to the pom.xml 
     	<version>1.0.1</version>
     	<type>jar</type>
 	</dependency>
-
+    <!-- Rhoconnect-java-api and its dependencies -->
+    <dependency>
+        <groupId>com.msi.rhoconnect.api</groupId>
+        <artifactId>rhoconnect-java-api</artifactId>
+        <version>1.0.0</version>
+        <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-bundle</artifactId>
+      <version>1.17</version>
+    </dependency>
+    <dependency>
+      <groupId>com.googlecode.json-simple</groupId>
+      <artifactId>json-simple</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+	
 ### Updating Your Servlet XML Configuration File
 
 Update your servlet xml configuration file to include rhoconnect-java metadata: the packages, converters, and beans. In the RhoconnectJavaSample, the following code is added to src/main/webapp/WEB-INF/spring-servlet.xml file.
@@ -113,10 +131,9 @@ Update your servlet xml configuration file to include rhoconnect-java metadata: 
     <!-- rhoconnect-java plugin beans -->
     <bean id="dispatcher" class = "com.rhomobile.rhoconnect.RhoconnectDispatcher"></bean>
     <bean id="rhoconnectClient" class = "com.rhomobile.rhoconnect.RhoconnectClient" init-method="setAppEndpoint" >
-     	<property name="restTemplate"><ref bean="restTemplate"/></property>
      	<property name="endpointUrl" value="your_rhoconnect_server_url" />
      	<property name="appEndpoint" value="your_spring_app_url" />
-     	<property name="apiToken" value="rhoconnect_api_token" />
+     	<property name="apiToken" value="my-rhoconnect-token" />
     </bean>
     
     <!--The following bean handles the application's authentication routine and should be implemented by you -->
@@ -136,7 +153,7 @@ link between the `Rhoconnect` server and the Spring 3 MVC application. It has th
   </tr>
   <tr>
 	<td><code>apiToken</code></td>
-	<td>rhoconnect server's api_token, for example <code>sometokenforme</code></td>
+	<td>rhoconnect server's api_token, for example <code>my-rhoconnect-token</code></td>
   </tr>
 </table>
 
@@ -324,6 +341,65 @@ Example for `RhoconnectJavaSample` application:
 	 }
 
 Click [here](https://github.com/shurab/RhoconnectJavaPluginDemo) to download full source code of Contact manager application with rhoconnect-java plugin.
+
+## RhoConnect-Java-API
+
+The rhoconnect-java project contains `java-api` module that provides Java API to all resources available in <a href='http://docs.rhomobile.com/rhoconnect/rest-api'>Rhoconnect</a>.  The `rhoconnect-java-api`is a generic Java library for communicating with RhoConnect RESTful API and might be used to implement java client apps or components of back-end servers. This library also is used by RhoConnect-Java plugin to directly access RhoConnect resources.
+
+The library has the following dependencies:
+
+* [jersey java](http://jersey.java.net/)
+* [json-simple](http://code.google.com/p/json-simple)
+
+
+### Sample of Java RhoConnect client app
+  
+	:::java
+	import com.msi.rhoconnect.api.SystemResource;
+	import com.msi.rhoconnect.api.UserResource;
+	import com.sun.jersey.api.client.ClientResponse;
+	import org.json.simple.JSONArray;
+	import org.json.simple.JSONValue;
+
+	public class JavaClient {
+		static String URL = "http://localhost:9292";
+
+		public static void main(String[] args) {
+			try {
+				ClientResponse response = SystemResource.login(URL, "");
+				if(response.getStatus() == 200) {
+					String token = response.getEntity(String.class);
+					System.out.println("Login to server. Got API token: " + token);
+
+					// List users registered with this RhoConnect application
+					response = UserResource.list(URL, token);
+					JSONArray users = (JSONArray)JSONValue.parse(response.getEntity(String.class));
+					System.out.println(users);
+
+					// Create "testuser" in this RhoConnect application
+					response = UserResource.create(URL, token, "testuser", "password");
+
+					// Make sure that 'testuser' is registered
+					response = UserResource.list(URL, token);
+					users = (JSONArray)JSONValue.parse(response.getEntity(String.class));
+					if(users.contains("testuser")) 
+						System.out.println("User 'testuser' created");
+					System.out.println(users);
+
+					// ....
+
+					// Delete "testuser" from this rhoconnect app
+					response = UserResource.delete(URL, token, "testuser");
+					if (response.getStatus() == 200) 
+						System.out.println("User 'testuser' deleted");
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+		}
+	}
+ 
 
 ## Meta
 Created and maintained by Alexander Babichev.

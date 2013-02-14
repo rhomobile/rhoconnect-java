@@ -26,7 +26,7 @@ public class SourceResource {
 	}
 	
 	// Return list of source adapters for this RhoConnect application for the given partition type. 
-	// Partition type can be one of PartitionType.App, PartitionType.User, PartitionType.All.
+	// Partition type is one of PartitionType.App, PartitionType.User, PartitionType.All.
 	public static ClientResponse getSources(String url, String token, PartitionType partitionType) {
 		Client client = Client.create();
 		// GET /rc/v1/sources/type/:partition_type
@@ -52,7 +52,7 @@ public class SourceResource {
 		return response;
 	}
 	
-	// Updates attributes associated with a given source. Attributes rea defined as a hash of attribute/value pair(s).
+	// Updates attributes associated with a given source. Attributes defined as a hash of attribute/value pair(s).
 	public static ClientResponse setAttributes(String url, String token, String sourceId, JSONObject sourceParams) {
 		Client client = Client.create();
 		// PUT /rc/v1/sources/:source_id

@@ -25,14 +25,14 @@ public class StoreResourceTest {
 	@Rule
 	public static WireMockRule wireMockRule = new WireMockRule(8089);
 	static String URL = "http://localhost:8089";
-//	static String api_token;
+	//static String api_token;
 	
 	String token;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-//		api_token = Helper.getToken(URL);
-//		Helper.reset(URL, api_token);
+		//api_token = Helper.getToken(URL);
+		//Helper.reset(URL, api_token);
 	}
 
 	@AfterClass
@@ -42,7 +42,15 @@ public class StoreResourceTest {
 	@Before
 	public void setUp() throws Exception {
 		token = "my-rhoconnect-token";
-//		token = api_token;
+		//token = api_token;
+		String docname = "api_token:" + token + ":value";
+		String url = String.format("/rc/v1/store/%s", docname);
+		stubFor(get(urlEqualTo(url))
+				.withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
+						.willReturn(aResponse()
+			                .withStatus(200)
+			                .withHeader("Content-Type", "application/json")
+			                .withBody(token)));
 	}
 
 	@After
@@ -52,13 +60,6 @@ public class StoreResourceTest {
 	@Test
 	public void testGet() {
 		String docname = "api_token:" + token + ":value";
-		String url = String.format("/rc/v1/store/%s", docname);
-		stubFor(get(urlEqualTo(url))
-				.withHeader("X-RhoConnect-API-TOKEN", equalTo(token))
-						.willReturn(aResponse()
-			                .withStatus(200)
-			                .withHeader("Content-Type", "application/json")
-			                .withBody(token)));
 		ClientResponse response = StoreResource.get(URL, token, docname);
 		assertEquals("Response code", 200, response.getStatus());
 		String body = response.getEntity(String.class);
