@@ -3,7 +3,8 @@
  */
 package com.msi.rhoconnect.api;
 
-import org.json.simple.JSONObject;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -59,20 +60,20 @@ public class ClientResource {
 	// the data is appended to the current doc (if it exists) instead of replacing it.
 	public static ClientResponse setSourcesDocnames(String url, String token, String clientId, String sourceId, 
 			String data, boolean append) {
-		JSONObject obj=new JSONObject();
+		Map<String, Object> obj=new HashMap<String, Object>();
 		obj.put("data", data);
 		obj.put("append", new Boolean(append));
-		String content = JSONObject.toJSONString(obj);
+		String content = JSONUtil.toJSONString(obj);
 
 		return set_source_docs(url, token, clientId, sourceId, content, append);
 	}
 
 	public static ClientResponse setSourcesDocnames(String url, String token, String clientId, String sourceId, 
-			JSONObject data, boolean append) {
-		JSONObject obj=new JSONObject();
-		obj.put("data", data);
-		obj.put("append", new Boolean(append));
-		String content = JSONObject.toJSONString(obj);
+	    Map<String, Object> data, boolean append) {
+	  Map<String, Object> obj=new HashMap<String, Object>();
+    obj.put("data", data);
+    obj.put("append", new Boolean(append));
+    String content = JSONUtil.toJSONString(obj);
 
 		return set_source_docs(url, token, clientId, sourceId, content, append);
 	}

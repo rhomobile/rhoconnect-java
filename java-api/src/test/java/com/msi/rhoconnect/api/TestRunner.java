@@ -17,7 +17,7 @@ public class TestRunner {
 //	    for (Failure failure : result.getFailures()) {
 //	      System.out.println(failure.toString());
 //	    }
-		
+		/*
 		JUnitCore junit = new JUnitCore();
 	    junit.addListener(new TextListener(System.out));		
 
@@ -28,5 +28,6 @@ public class TestRunner {
 	    junit.run(ClientResourceTest.class);
 	    junit.run(SystemResourceTest.class);
 	    junit.run(ReadStateResourceTest.class);
+	    */
 	}
 }
