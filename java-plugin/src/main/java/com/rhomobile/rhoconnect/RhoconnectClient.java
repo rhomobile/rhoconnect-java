@@ -1,6 +1,7 @@
 package com.rhomobile.rhoconnect;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -80,9 +81,10 @@ public class RhoconnectClient {
     }
 
     Map<String, Object> data = new HashMap<String, Object>();
-    
-    data.put(String.valueOf(objId), modelToMapObject(object)); // => { objId => { object
-                                                // properties } }
+
+    data.put(String.valueOf(objId), modelToMapObject(object)); // => { objId =>
+                                                               // { object
+    // properties } }
     ClientResponse response = PluginResource.pushObjects(endpointUrl, apiToken, partition, sourceName, data);
 
     logger.debug("RhoconnectClient#notifyOnCreate: source/partition: " + sourceName + '/' + partition);
@@ -118,12 +120,22 @@ public class RhoconnectClient {
   // Helper methods
   // Convert model to JSONObject: { prop_name1 => prop_value1, ... }
   public Map<String, Object> modelToMapObject(Object model) {
-    try{
-      return (model instanceof Map) ? ((Map<String, Object>) model) : PropertyUtils.describe(model);
-    }catch(Exception e){
+    try {
+      Map<String, Object> map = (model instanceof Map) ? ((Map<String, Object>) model) : PropertyUtils
+          .describe(model);
+      Map<String, Object> obj = new HashMap<String, Object>();
+      for (Entry<String, ?> es : map.entrySet()) {
+        String key = es.getKey();
+        Object value = es.getValue();
+        if (!key.equals("class") && value != null) {
+          obj.put(key, value);
+        }
+      }
+      return obj;
+    } catch (Exception e) {
       e.printStackTrace();
     }
-    return new HashMap<String,Object>();
+    return new HashMap<String, Object>();
   }
 
   // Get stack trace and look for "controllerName" there
