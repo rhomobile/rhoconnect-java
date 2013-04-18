@@ -3,7 +3,8 @@
  */
 package com.msi.rhoconnect.api;
 
-import org.json.simple.JSONObject;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -53,15 +54,15 @@ public class SourceResource {
 	}
 	
 	// Updates attributes associated with a given source. Attributes defined as a hash of attribute/value pair(s).
-	public static ClientResponse setAttributes(String url, String token, String sourceId, JSONObject sourceParams) {
+	public static ClientResponse setAttributes(String url, String token, String sourceId, Map<String,Object> sourceParams) {
 		Client client = Client.create();
 		// PUT /rc/v1/sources/:source_id
 		String path = String.format("%s/rc/v1/sources/%s", url, sourceId);
 		WebResource webResource = client.resource(path);
 		
-		JSONObject obj=new JSONObject();
+		Map<String, Object> obj = new HashMap<String, Object>();
 		obj.put("data", sourceParams);
-		String content = JSONObject.toJSONString(obj);
+		String content = JSONUtil.toJSONString(obj);
 		
 		ClientResponse response = webResource.type("application/json")
 				.header("X-RhoConnect-API-TOKEN", token)

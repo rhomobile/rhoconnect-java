@@ -3,7 +3,8 @@
  */
 package com.msi.rhoconnect.api;
 
-import org.json.simple.JSONObject;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -55,15 +56,15 @@ public class UserResource {
 	// Update attributes for a user on this RhoConnect application
 	// userAttributes is a hash of her attribute/value pairs:
 	// {:a_user_specific_attribute => a_user_specific_attribute_value} 
-	public static ClientResponse update(String url, String token, String userId, JSONObject userAttributes) {
+	public static ClientResponse update(String url, String token, String userId, Map<String, Object> userAttributes) {
 		Client client = Client.create();
 		// PUT /rc/v1/users/:user_id
 		String path = String.format("%s/rc/v1/users/%s", url, userId);
 		WebResource webResource = client.resource(path);
 		
-		JSONObject obj=new JSONObject();
+		Map<String, Object> obj = new HashMap<String, Object>();
 		obj.put("attributes", userAttributes);
-		String content = JSONObject.toJSONString(obj);
+		String content = JSONUtil.toJSONString(obj);
 		
 		ClientResponse response = webResource.type("application/json")
 				.header("X-RhoConnect-API-TOKEN", token)
@@ -125,13 +126,13 @@ public class UserResource {
 	}
 	
 	// Sends PUSH message to all devices of the specified user(s)
-	public static ClientResponse ping(String url, String token, JSONObject pingParams) {
+	public static ClientResponse ping(String url, String token, Map<String, Object> pingParams) {
 		Client client = Client.create();
 		// POST /rc/v1/users/ping
 		String path = String.format("%s/rc/v1/users/ping", url);
 		WebResource webResource = client.resource(path);
 
-		String content = JSONObject.toJSONString(pingParams);		
+		String content = JSONUtil.toJSONString(pingParams);		
 		ClientResponse response = webResource.type("application/json")
 			.header("X-RhoConnect-API-TOKEN", token)
 			.post(ClientResponse.class, content);
@@ -157,10 +158,10 @@ public class UserResource {
 	// instead of replacing it.	
 	public static ClientResponse setSourcesDocs(String url, String token, String userId, String sourceId, 
 			String docname, String data, boolean append) {
-		JSONObject obj=new JSONObject();
+		Map<String, Object> obj = new HashMap<String, Object>();
 		obj.put("data", data);
 		obj.put("append", new Boolean(append));
-		String content = JSONObject.toJSONString(obj);
+		String content = JSONUtil.toJSONString(obj);
 
 		// POST /rc/v1/users/:user_id/sources/:source_id/docs/:doc
 		return set_source_docs(url, token, userId, sourceId, docname, content, append);
@@ -171,11 +172,11 @@ public class UserResource {
 	// If append flag is set to true , the data is appended to the current doc (if it exists) 
 	// instead of replacing it.	
 	public static ClientResponse setSourcesDocs(String url, String token, String userId, String sourceId,
-			String docname, JSONObject data, boolean append) {
-		JSONObject obj = new JSONObject();
+			String docname, Map<String,Object> data, boolean append) {
+		Map<String, Object> obj = new HashMap<String, Object>();
 		obj.put("data", data);
 		obj.put("append", new Boolean(append));
-		String content = JSONObject.toJSONString(obj);
+		String content = JSONUtil.toJSONString(obj);
 
 		// POST /rc/v1/users/:user_id/sources/:source_id/docs/:doc
 		return set_source_docs(url, token, userId, sourceId, docname, content, append);

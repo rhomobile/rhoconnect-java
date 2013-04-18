@@ -3,7 +3,8 @@
  */
 package com.msi.rhoconnect.api;
 
-import org.json.simple.JSONObject;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -34,10 +35,10 @@ public class StoreResource {
 	// If append flag is set to true , the data is appended to the current doc (if it exists) 
 	// instead of replacing it.
 	public static ClientResponse set(String url, String token, String docname, String data, boolean append) {
-		JSONObject obj= new JSONObject();
+	  Map<String, Object> obj = new HashMap<String, Object>();
 		obj.put("data", data);
 		obj.put("append", new Boolean(append));
-		String content = JSONObject.toJSONString(obj);
+		String content = JSONUtil.toJSONString(obj);
 		
 		// POST /rc/v1/store/:doc
 		return set_db_doc(url, token, docname, content, append);		
@@ -46,11 +47,11 @@ public class StoreResource {
 	// Sets the content of the specified server document. Data should be a hash of hashes. 
 	// If append flag is set to true , the data is appended to the current doc (if it exists) 
 	// instead of replacing it.
-	public static ClientResponse set(String url, String token, String docname, JSONObject data, boolean append) {
-		JSONObject obj= new JSONObject();
-		obj.put("data", data);
-		obj.put("append", new Boolean(append));
-		String content = JSONObject.toJSONString(obj);
+	public static ClientResponse set(String url, String token, String docname, Map<String,Object> data, boolean append) {
+	  Map<String, Object> obj = new HashMap<String, Object>();
+    obj.put("data", data);
+    obj.put("append", new Boolean(append));
+    String content = JSONUtil.toJSONString(obj);
 
 		// POST /rc/v1/store/:doc
 		return set_db_doc(url, token, docname, content, append);		

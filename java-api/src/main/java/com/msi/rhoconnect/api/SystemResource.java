@@ -8,8 +8,6 @@ import java.util.Map;
 
 import javax.ws.rs.core.MultivaluedMap;
 
-import org.json.simple.JSONObject;
-
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -32,7 +30,7 @@ public class SystemResource {
 		Map<String, String> credentials = new HashMap<String, String>();
 		credentials.put("login", "rhoadmin");
 		credentials.put("password", password);
-		String content = JSONObject.toJSONString(credentials);
+		String content = JSONUtil.toJSONString(credentials);
 
 		ClientResponse response = webResource.type("application/json")
 				.post(ClientResponse.class, content);		
@@ -90,7 +88,7 @@ public class SystemResource {
 
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("adapter_url", adapterUrl);
-		String content = JSONObject.toJSONString(data);
+		String content = JSONUtil.toJSONString(data);
 		
 		ClientResponse response = webResource.type("application/json")
 				.header("X-RhoConnect-API-TOKEN", token)
